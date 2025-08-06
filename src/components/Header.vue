@@ -15,17 +15,9 @@
         <li class="font-bold text-6xl text-transparent" style="-webkit-text-stroke: 1px white">
           21
         </li>
-        <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">
-          ДОСТАВКА
-        </li>
-        <li class="flex gap-[26px]">
-          <img src="/Magazine.svg" class="cursor-pointer hover:-translate-y-2 transition" alt="" />
-          <img src="/Inst-icon.svg" class="cursor-pointer hover:-translate-y-2 transition" alt="" />
-          <img
-            src="/Facebook-icon.svg"
-            class="cursor-pointer hover:-translate-y-2 transition transition"
-            alt=""
-          />
+        <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">КОРЗИНА</li>
+        <li class="cursor-pointer hover:-translate-y-2 transition">
+          <img src="/profile.svg" alt="" class="w-6 h-6 text-white filter brightness-0 invert" />
         </li>
       </ul>
     </header>
