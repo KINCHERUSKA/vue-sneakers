@@ -8,6 +8,10 @@ const onClickAdd = () => {
 const onClickFavorite = () => {
   alert('Сохранено!')
 }
+
+defineProps({
+  items: Array,
+})
 </script>
 
 <template>
@@ -15,20 +19,14 @@ const onClickFavorite = () => {
     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-12 lg:gap-20"
   >
     <Card
-      :is-favorite="true"
-      :is-added="true"
-      title="Casual Sneakers"
-      image-url="/sneakers/sneakers-1.jpg"
+      v-for="item in items"
+      :key="item.id"
+      :title="item.title"
+      :image-url="item.imageUrl"
+      :is-favorite="false"
+      :is-added="false"
       :onClickAdd="onClickAdd"
       :onClickFavorite="onClickFavorite"
     />
-    <Card
-      :is-favorite="false"
-      :is-added="false"
-      title="Casual Sneakers"
-      image-url="/sneakers/sneakers-2.jpg"
-    />
-    <Card />
-    <Card />
   </div>
 </template>
