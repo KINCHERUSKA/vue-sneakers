@@ -9,6 +9,8 @@ import Footer from './components/Footer.vue'
 import Action from './components/Action.vue'
 
 const items = ref([])
+const newItems = ref([])
+const favoriteItems = ref([])
 
 const fetchItems = async () => {
   try {
@@ -38,9 +40,20 @@ const fetchFavorites = async () => {
         favoriteId: favorite.id,
       }
     })
+    favoriteItems.value = getRandomItems(items.value, 4)
+    newItems.value = getRandomItems(items.value, 4)
   } catch (err) {
     console.log(err)
   }
+}
+
+const getRandomItems = (array, count) => {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled.slice(0, count)
 }
 
 onMounted(async () => {
@@ -72,7 +85,7 @@ onMounted(async () => {
       >
     </div>
 
-    <CardList :items="items" />
+    <CardList :items="newItems" />
 
     <div class="bg-black w-screen -mx-[200px] flex justify-start px-[200px] py-4">
       <span class="text-white font-bold text-5xl mr-[40px]">ПОПУЛЯРНОЕ</span>
@@ -81,7 +94,7 @@ onMounted(async () => {
       >
     </div>
 
-    <CardList :items="items" />
+    <CardList :items="favoriteItems" />
 
     <Action />
 
