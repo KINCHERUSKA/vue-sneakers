@@ -21,10 +21,10 @@ defineProps({
     <Card
       v-for="item in items"
       :key="item.id"
-      :title="item.title"
+      :title="item.name"
       :image-url="item.imageUrl"
-      :is-favorite="false"
-      :is-added="false"
+      :is-favorite="item.isFavorite"
+      :is-added="item.isAdded"
       :onClickAdd="onClickAdd"
       :onClickFavorite="onClickFavorite"
     />

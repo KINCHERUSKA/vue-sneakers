@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import axios from 'axios'
 
 import Header from './components/Header.vue'
@@ -8,57 +8,45 @@ import Delivery from './components/Delivery.vue'
 import Footer from './components/Footer.vue'
 import Action from './components/Action.vue'
 
-const itemsNew = ref([])
-const itemsPop = ref([])
+const items = ref([])
 
-onMounted(async () => {
+const fetchItems = async () => {
   try {
-    const { data: newItems } = await axios.get('https://e0c9bc90f123d6dd.mokky.dev/new_sale')
-    itemsNew.value = newItems
-
-    const { data: popularItems } = await axios.get(
-      'https://e0c9bc90f123d6dd.mokky.dev/popular_sale',
-    )
-    itemsPop.value = popularItems
+    const { data } = await axios.get('https://e0c9bc90f123d6dd.mokky.dev/sale')
+    items.value = data.map((obj) => ({
+      ...obj,
+      isFavorite: false,
+      isAdded: false,
+    }))
   } catch (err) {
     console.log(err)
   }
-})
+}
 
-const items2 = [
-  {
-    id: 2,
-    name: 'Running Shoes',
-    description: 'Легкие кроссовки для бега',
-    price: 120,
-    currency: 1,
-    imageUrl: '/sneakers/sneakers-2.jpg',
-  },
-  {
-    id: 3,
-    name: 'Classic Jeans',
-    description: 'Джинсы классического кроя',
-    price: 80,
-    currency: 1,
-    imageUrl: '/sneakers/sneakers-3.jpg',
-  },
-  {
-    id: 4,
-    name: 'Winter Jacket',
-    description: 'Теплая зимняя куртка',
-    price: 200,
-    currency: 1,
-    imageUrl: '/sneakers/sneakers-4.jpg',
-  },
-  {
-    id: 5,
-    name: 'Baseball Cap',
-    description: 'Стильная бейсболка',
-    price: 25,
-    currency: 1,
-    imageUrl: '/sneakers/sneakers-5.jpg',
-  },
-]
+const fetchFavorites = async () => {
+  try {
+    const { data: favorites } = await axios.get('https://e0c9bc90f123d6dd.mokky.dev/favorites')
+    items.value = items.value.map((item) => {
+      const favorite = favorites.find((favorite) => favorite.parentId === item.id)
+
+      if (!favorite) {
+        return item
+      }
+      return {
+        ...item,
+        isFavorite: true,
+        favoriteId: favorite.id,
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+onMounted(async () => {
+  await fetchItems()
+  await fetchFavorites()
+})
 </script>
 
 <template>
@@ -84,7 +72,7 @@ const items2 = [
       >
     </div>
 
-    <CardList :items="itemsNew" />
+    <CardList :items="items" />
 
     <div class="bg-black w-screen -mx-[200px] flex justify-start px-[200px] py-4">
       <span class="text-white font-bold text-5xl mr-[40px]">ПОПУЛЯРНОЕ</span>
@@ -92,7 +80,8 @@ const items2 = [
         >POPULAR</span
       >
     </div>
-    <CardList :items="itemsPop" />
+
+    <CardList :items="items" />
 
     <Action />
 
