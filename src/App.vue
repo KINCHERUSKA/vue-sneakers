@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, provide } from 'vue'
 import axios from 'axios'
 
 import Header from './components/Header.vue'
@@ -18,6 +18,7 @@ const fetchItems = async () => {
     items.value = data.map((obj) => ({
       ...obj,
       isFavorite: false,
+      favoriteId: null,
       isAdded: false,
     }))
   } catch (err) {
@@ -47,6 +48,27 @@ const fetchFavorites = async () => {
   }
 }
 
+const addToFavorite = async (item) => {
+  try {
+    if (!item.isFavorite) {
+      const obj = {
+        parentId: item.id,
+      }
+      const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/favorites', obj)
+      item.isFavorite = true
+      item.favoriteId = data.id
+      console.log(data)
+    } else {
+      await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${item.favoriteId}`)
+      item.isFavorite = false
+      item.favoriteId = null
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+//потом пофиксить чтоб два раза не вызывать
 const getRandomItems = (array, count) => {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -60,6 +82,8 @@ onMounted(async () => {
   await fetchItems()
   await fetchFavorites()
 })
+
+provide('addToFavorite', addToFavorite)
 </script>
 
 <template>
@@ -85,7 +109,7 @@ onMounted(async () => {
       >
     </div>
 
-    <CardList :items="newItems" />
+    <CardList :items="newItems" @addToFavorite="addToFavorite" />
 
     <div class="bg-black w-screen -mx-[200px] flex justify-start px-[200px] py-4">
       <span class="text-white font-bold text-5xl mr-[40px]">ПОПУЛЯРНОЕ</span>
@@ -94,7 +118,7 @@ onMounted(async () => {
       >
     </div>
 
-    <CardList :items="favoriteItems" />
+    <CardList :items="favoriteItems" @addToFavorite="addToFavorite" />
 
     <Action />
 
