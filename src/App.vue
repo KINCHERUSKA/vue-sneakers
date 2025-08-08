@@ -7,10 +7,21 @@ import CardList from './components/CardL.vue'
 import Delivery from './components/Delivery.vue'
 import Footer from './components/Footer.vue'
 import Action from './components/Action.vue'
+import Drawer from './components/Drawer.vue'
 
 const items = ref([])
 const newItems = ref([])
 const favoriteItems = ref([])
+
+const drawerOpen = ref(false)
+
+const closeDrawer = () => {
+  drawerOpen.value = false
+}
+
+const openDrawer = () => {
+  drawerOpen.value = false
+}
 
 const fetchItems = async () => {
   try {
@@ -54,13 +65,13 @@ const addToFavorite = async (item) => {
       const obj = {
         parentId: item.id,
       }
-      const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/favorites', obj)
       item.isFavorite = true
+      const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/favorites', obj)
       item.favoriteId = data.id
       console.log(data)
     } else {
-      await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${item.favoriteId}`)
       item.isFavorite = false
+      await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${item.favoriteId}`)
       item.favoriteId = null
     }
   } catch (err) {
@@ -90,6 +101,8 @@ provide('addToFavorite', addToFavorite)
   <Header />
 
   <div class="gap-[80px] px-[200px] py-[85px] font-raleway flex flex-col items-center">
+    <Drawer v-if="drawerOpen" />
+
     <div class="flex w-full justify-between items-center">
       <img src="/sneakers/9c79bce5f9246f9783d0494819cdff9d.jpg" class="mr-[170px]" alt="" />
       <div>
