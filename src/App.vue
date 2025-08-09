@@ -11,7 +11,7 @@ import Drawer from './components/Drawer.vue'
 
 const items = ref([])
 const newItems = ref([])
-const favoriteItems = ref([])
+const popularItems = ref([])
 
 const drawerOpen = ref(false)
 
@@ -52,7 +52,7 @@ const fetchFavorites = async () => {
         favoriteId: favorite.id,
       }
     })
-    favoriteItems.value = getRandomItems(items.value, 4)
+    popularItems.value = getRandomItems(items.value, 4)
     newItems.value = getRandomItems(items.value, 4)
   } catch (err) {
     console.log(err)
@@ -100,9 +100,11 @@ provide('addToFavorite', addToFavorite)
 <template>
   <Header />
 
-  <div class="gap-[80px] px-[200px] py-[85px] font-raleway flex flex-col items-center">
-    <Drawer v-if="drawerOpen" />
-
+  <div class="w-screen gap-20 px-[200px] py-[85px] font-raleway flex flex-col items-center">
+    
+    <!-- <Drawer v-if="drawerOpen"  -->/>
+    <Drawer/>
+    <!-- Описание бренда -->
     <div class="flex w-full justify-between items-center">
       <img src="/sneakers/9c79bce5f9246f9783d0494819cdff9d.jpg" class="mr-[170px]" alt="" />
       <div>
@@ -115,7 +117,8 @@ provide('addToFavorite', addToFavorite)
       </div>
     </div>
 
-    <div class="bg-black w-screen -mx-[200px] flex justify-start px-[200px] py-4">
+    <!-- Линия перехода -->
+    <div class="bg-black w-screen flex justify-start px-[200px] py-4">
       <span class="text-white font-bold text-5xl mr-[40px]">НОВИНКИ</span>
       <span class="font-bold text-5xl text-transparent" style="-webkit-text-stroke: 1px white"
         >NEW</span
@@ -124,19 +127,20 @@ provide('addToFavorite', addToFavorite)
 
     <CardList :items="newItems" @addToFavorite="addToFavorite" />
 
-    <div class="bg-black w-screen -mx-[200px] flex justify-start px-[200px] py-4">
+    <!-- Линия перехода -->
+    <div class="bg-black w-screen flex justify-start px-[200px] py-4">
       <span class="text-white font-bold text-5xl mr-[40px]">ПОПУЛЯРНОЕ</span>
       <span class="font-bold text-5xl text-transparent" style="-webkit-text-stroke: 1px white"
         >POPULAR</span
       >
     </div>
 
-    <CardList :items="favoriteItems" @addToFavorite="addToFavorite" />
+    <CardList :items="popularItems" @addToFavorite="addToFavorite" />
 
     <Action />
 
     <Delivery />
   </div>
-
+  
   <Footer />
 </template>

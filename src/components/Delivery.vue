@@ -28,7 +28,7 @@
       </p>
     </div>
     <div
-      class="bg-bottom bg-cover cursor-pointer my-20 w-[668px] h-[780px] gap-2 bg-[url(/public/Posters/1.jpg)] flex flex-col items-center justify-center text-white hover:-translate-y-2 hover:shadow-2xl hover:z-10 transition"
+      class="bg-bottom bg-cover cursor-pointer my-20 w-[100%] h-[780px] gap-2 bg-[url(/public/Posters/1.jpg)] flex flex-col items-center justify-center text-white hover:-translate-y-2 hover:shadow-2xl hover:z-10 transition"
     >
       <span class="font-bold text-5xl text-transparent" style="-webkit-text-stroke: 1px white"
         >21</span
@@ -40,14 +40,14 @@
       </div>
     </div>
     <div
-      class="bg-bottom bg-cover cursor-pointer my-20 w-[668px] h-[780px] gap-2 bg-[url(/public/Posters/2.jpg)] flex flex-col items-center justify-center text-white hover:-translate-y-2 hover:shadow-2xl hover:z-10 transition"
+      class="bg-bottom bg-cover cursor-pointer my-20 w-[100%] h-[780px] gap-2 bg-[url(/public/Posters/2.jpg)] flex flex-col items-center justify-center text-white hover:-translate-y-2 hover:shadow-2xl hover:z-10 transition"
     >
       <span class="font-bold text-5xl text-transparent" style="-webkit-text-stroke: 1px white"
         >21</span
       >
       <h2 class="text-3xl font-bold">Скидка -10%</h2>
       <h4 class="text-center">За подписку на наши новости</h4>
-      <div class="bg-white cursor-pointer">
+      <div class="bg-white cursor-pointer">    
         <h4 class="mx-24 my-2 text-black font-bold">Подписаться</h4>
       </div>
     </div>
