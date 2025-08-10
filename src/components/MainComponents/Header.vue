@@ -1,3 +1,7 @@
+<script setup>
+const emit = defineEmits(['openDrawer'])
+</script>
+
 <template>
   <div
     class="relative font-raleway text-white px-[200px] py-[85px] h-[880px] flex flex-col items-center relative"
@@ -15,7 +19,12 @@
         <li class="font-bold text-6xl text-transparent" style="-webkit-text-stroke: 1px white">
           21
         </li>
-        <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">КОРЗИНА</li>
+        <li
+          @click="() => emit('openDrawer')"
+          class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition"
+        >
+          КОРЗИНА
+        </li>
         <li class="cursor-pointer hover:-translate-y-2 transition">
           <img src="/profile.svg" alt="" class="w-6 h-6 text-white filter brightness-0 invert" />
         </li>

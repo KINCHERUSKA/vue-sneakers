@@ -2,25 +2,27 @@
 import { onMounted, ref, watch, provide } from 'vue'
 import axios from 'axios'
 
-import Header from './components/Header.vue'
-import CardList from './components/CardL.vue'
-import Delivery from './components/Delivery.vue'
-import Footer from './components/Footer.vue'
-import Action from './components/Action.vue'
-import Drawer from './components/Drawer.vue'
+import Header from './components/MainComponents/Header.vue'
+import CardList from './components/CardListItems/CardL.vue'
+import Delivery from './components/MainPage/Delivery.vue'
+import Footer from './components/MainComponents/Footer.vue'
+import Action from './components/MainPage/Action.vue'
+import Drawer from './components/DrawerItems/Drawer.vue'
 
 const items = ref([])
 const newItems = ref([])
 const popularItems = ref([])
+const card = ref([])
+const name = 'главная'
 
-const drawerOpen = ref(false)
+const drawerOpen = ref(true)
 
 const closeDrawer = () => {
   drawerOpen.value = false
 }
 
 const openDrawer = () => {
-  drawerOpen.value = false
+  drawerOpen.value = true
 }
 
 const fetchItems = async () => {
@@ -68,11 +70,24 @@ const addToFavorite = async (item) => {
       item.isFavorite = true
       const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/favorites', obj)
       item.favoriteId = data.id
-      console.log(data)
     } else {
       item.isFavorite = false
       await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${item.favoriteId}`)
       item.favoriteId = null
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const addToCard = async (item) => {
+  try {
+    if (!item.isAdded) {
+      card.value.push(item)
+      item.isAdded = true
+    } else {
+      card.value.splice(card.value.indexOf(item), 1)
+      item.isAdded = false
     }
   } catch (err) {
     console.log(err)
@@ -94,16 +109,15 @@ onMounted(async () => {
   await fetchFavorites()
 })
 
-provide('addToFavorite', addToFavorite)
+provide('favoriteActions', addToFavorite)
+provide('cardActions', { card, openDrawer, closeDrawer })
 </script>
 
 <template>
-  <Header />
+  <Header @open-drawer="openDrawer" />
 
   <div class="w-screen gap-20 px-[200px] py-[85px] font-raleway flex flex-col items-center">
-    
-    <!-- <Drawer v-if="drawerOpen"  -->/>
-    <Drawer/>
+    <Drawer v-if="drawerOpen" :name="name" />
     <!-- Описание бренда -->
     <div class="flex w-full justify-between items-center">
       <img src="/sneakers/9c79bce5f9246f9783d0494819cdff9d.jpg" class="mr-[170px]" alt="" />
@@ -125,7 +139,7 @@ provide('addToFavorite', addToFavorite)
       >
     </div>
 
-    <CardList :items="newItems" @addToFavorite="addToFavorite" />
+    <CardList :items="newItems" @addToFavorite="addToFavorite" @add-to-card="addToCard" />
 
     <!-- Линия перехода -->
     <div class="bg-black w-screen flex justify-start px-[200px] py-4">
@@ -135,12 +149,12 @@ provide('addToFavorite', addToFavorite)
       >
     </div>
 
-    <CardList :items="popularItems" @addToFavorite="addToFavorite" />
+    <CardList :items="popularItems" @add-to-favorite="addToFavorite" @add-to-card="addToCard" />
 
     <Action />
 
     <Delivery />
   </div>
-  
+
   <Footer />
 </template>
