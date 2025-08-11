@@ -20,8 +20,8 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
       :image-url="item.imageUrl"
       :is-favorite="item.isFavorite"
       :is-added="item.isAdded"
-      :onClickAdd="() => emit('addToCard', item)"
-      :onClickFavorite="() => emit('addToFavorite', item)"
+      :on-click-add="() => emit('addToCard', item)"
+      :on-click-favorite="() => emit('addToFavorite', item)"
     />
   </div>
 </template>

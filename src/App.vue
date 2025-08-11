@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, provide } from 'vue'
+import { onMounted, ref, watch, provide, computed } from 'vue'
 import axios from 'axios'
 
 import Header from './components/MainComponents/Header.vue'
@@ -13,9 +13,14 @@ const items = ref([])
 const newItems = ref([])
 const popularItems = ref([])
 const card = ref([])
+
 const name = 'главная'
 
-const drawerOpen = ref(true)
+const totalPrice = computed(() => card.value.reduce((acc, item) => acc + item.price, 0))
+const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
+const absolutePrice = computed(() => totalPrice.value - vatPrice.value)
+
+const drawerOpen = ref(false)
 
 const closeDrawer = () => {
   drawerOpen.value = false
@@ -82,13 +87,41 @@ const addToFavorite = async (item) => {
 
 const addToCard = async (item) => {
   try {
-    if (!item.isAdded) {
-      card.value.push(item)
-      item.isAdded = true
-    } else {
-      card.value.splice(card.value.indexOf(item), 1)
-      item.isAdded = false
+    card.value.push(item)
+    item.isAdded = true
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const removeFromCard = async (item) => {
+  try {
+    card.value.splice(card.value.indexOf(item), 1)
+    item.isAdded = false
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const onClickAdd = (item) => {
+  if (!item.isAdded) {
+    addToCard(item)
+  } else {
+    removeFromCard(item)
+  }
+}
+
+const CreateOrder = async () => {
+  try {
+    const { data } = await axios.post(`https://e0c9bc90f123d6dd.mokky.dev/orders`, {
+      items: card.value,
+      absolutePrice: absolutePrice.value,
+    })
+    while (card.value.length > 0) {
+      removeFromCard(card.value[0])
     }
+
+    return data
   } catch (err) {
     console.log(err)
   }
@@ -110,14 +143,22 @@ onMounted(async () => {
 })
 
 provide('favoriteActions', addToFavorite)
-provide('cardActions', { card, openDrawer, closeDrawer })
+provide('cardActions', { card, openDrawer, closeDrawer, addToCard, removeFromCard })
 </script>
 
 <template>
   <Header @open-drawer="openDrawer" />
 
   <div class="w-screen gap-20 px-[200px] py-[85px] font-raleway flex flex-col items-center">
-    <Drawer v-if="drawerOpen" :name="name" />
+    <Drawer
+      :vat-price="vatPrice"
+      :absolute-price="absolutePrice"
+      :card="card"
+      :total-price="totalPrice"
+      :name="name"
+      @create-order="CreateOrder"
+      v-if="drawerOpen"
+    />
     <!-- Описание бренда -->
     <div class="flex w-full justify-between items-center">
       <img src="/sneakers/9c79bce5f9246f9783d0494819cdff9d.jpg" class="mr-[170px]" alt="" />
@@ -139,7 +180,7 @@ provide('cardActions', { card, openDrawer, closeDrawer })
       >
     </div>
 
-    <CardList :items="newItems" @addToFavorite="addToFavorite" @add-to-card="addToCard" />
+    <CardList :items="newItems" @addToFavorite="addToFavorite" @add-to-card="onClickAdd" />
 
     <!-- Линия перехода -->
     <div class="bg-black w-screen flex justify-start px-[200px] py-4">
@@ -149,7 +190,7 @@ provide('cardActions', { card, openDrawer, closeDrawer })
       >
     </div>
 
-    <CardList :items="popularItems" @add-to-favorite="addToFavorite" @add-to-card="addToCard" />
+    <CardList :items="popularItems" @add-to-favorite="addToFavorite" @add-to-card="onClickAdd" />
 
     <Action />
 

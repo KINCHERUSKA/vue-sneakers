@@ -6,6 +6,8 @@ defineProps({
   price: Number,
   size: String,
   isFavorite: Boolean,
+  onClickFavorite: Function,
+  onClickRemove: Function,
 })
 </script>
 
@@ -14,14 +16,14 @@ defineProps({
   <div class="w-full justify-between flex items-start">
     <div class="grid w-full grid-flow-col grid-template-4 items-center gap-8">
       <!--     <img :src="imageUrl" class="" alt="Sneakers" /> -->
-      <img src="\sneakers\sneakers-1.jpg" alt="" class="object-contain" />
+      <img :src="imageUrl" :alt="title" class="object-contain" />
       <div class="flex gap-8">
-        <span class="">Sneakers</span>
+        <span class="">{{ title }}</span>
         <span class="underline underline-offset-1">42</span>
       </div>
       <div class="flex flex-col gap-4 p-10 justify-center">
         <div class="flex gap-2 text-gray-400">
-          <span>42</span>
+          <span>{{ price }}</span>
           <span>руб</span>
         </div>
       </div>
@@ -32,7 +34,7 @@ defineProps({
           alt=""
           class="cursor-pointer"
         />
-        <img src="\public\close.svg" alt="" class="cursor-pointer" />
+        <img @click="onClickRemove" src="\public\close.svg" alt="" class="cursor-pointer" />
       </div>
     </div>
   </div>
