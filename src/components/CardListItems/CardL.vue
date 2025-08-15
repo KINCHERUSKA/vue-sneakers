@@ -10,6 +10,7 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
 
 <template>
   <div
+    v-auto-animate
     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-12 lg:gap-20"
   >
     <Card

@@ -1,5 +1,5 @@
 <script setup>
-const emit = defineEmits(['openDrawer'])
+import HeaderMain from '../MainPage/HeaderMain.vue'
 </script>
 
 <template>
@@ -15,40 +15,29 @@ const emit = defineEmits(['openDrawer'])
     <header class="flex w-full">
       <ul class="flex justify-between w-full items-baseline">
         <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">КАТАЛОГ</li>
-        <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">О НАС</li>
-        <li class="font-bold text-6xl text-transparent" style="-webkit-text-stroke: 1px white">
-          21
-        </li>
-        <li
-          @click="() => emit('openDrawer')"
-          class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition"
+        <router-link to="/favorites">
+          <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">
+            ЗАКЛАДКИ
+          </li></router-link
         >
-          КОРЗИНА
-        </li>
+
+        <router-link to="/"
+          ><li class="font-bold text-6xl text-transparent" style="-webkit-text-stroke: 1px white">
+            21
+          </li></router-link
+        >
+        <router-link to="/drawer">
+          <li class="font-medium text-2xl cursor-pointer hover:-translate-y-2 transition">
+            КОРЗИНА
+          </li>
+        </router-link>
+
         <li class="cursor-pointer hover:-translate-y-2 transition">
           <img src="/profile.svg" alt="" class="w-6 h-6 text-white filter brightness-0 invert" />
         </li>
       </ul>
     </header>
-    <div class="text-center" style="margin-top: 265px">
-      <p class="font-bold text-5xl mb-4">21 FOR CHUVASH</p>
-      <p class="font-normal text-2xl">Дизайнерские кроссовки, вдохновлённая чувашской культурой</p>
-    </div>
-    <div
-      class="-bottom-20 right-0 bg-black flex flex-col px-12 py-8 absolute size-fit text-2xl gap-[26px]"
-    >
-      <div class="flex gap-[10px]">
-        <img src="/public/WhiteStrih.svg" alt="" />
-        <span>отличное качество</span>
-      </div>
-      <div class="flex gap-[10px]">
-        <img src="/public/WhiteStrih.svg" alt="" />
-        <span>приятный материал</span>
-      </div>
-      <div class="flex gap-[10px]">
-        <img src="/public/WhiteStrih.svg" alt="" />
-        <span>доставка по всему миру</span>
-      </div>
-    </div>
+
+    <HeaderMain />
   </div>
 </template>

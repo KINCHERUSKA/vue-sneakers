@@ -33,6 +33,7 @@ defineProps({
           :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
           alt=""
           class="cursor-pointer"
+          v-auto-animate
         />
         <img @click="onClickRemove" src="\public\close.svg" alt="" class="cursor-pointer" />
       </div>
