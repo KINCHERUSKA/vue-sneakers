@@ -8,6 +8,8 @@ const store = createStore({
       card: [],
       newItems: [],
       popularItems: [],
+      favorites: [],
+      isLogged: Boolean,
     }
   },
   mutations: {
@@ -34,14 +36,23 @@ const store = createStore({
     },
 
     setFavorites(state, favorites) {
-      state.items = state.items.map((item) => {
-        const favorite = favorites.find((f) => f.parentId === item.id)
-        return {
-          ...item,
-          isFavorite: !!favorite,
-          favoriteId: favorite?.id || null,
-        }
-      })
+      state.favorites = favorites
+
+      const favIds = new Set(favorites.map((fav) => fav.parentId))
+      state.items = state.items.map((item) => ({
+        ...item,
+        isFavorite: favIds.has(item.id),
+        favoriteId: favorites.find((f) => f.parentId === item.id)?.id || null,
+      }))
+    },
+
+    addToFavorites(state, { favoriteId, productId }) {
+      state.favorites.push({ id: favoriteId, parentId: productId })
+    },
+
+    // Удаление из закладок
+    removeFromFavorites(state, favoriteId) {
+      state.favorites = state.favorites.filter((item) => item.id !== favoriteId)
     },
 
     //Корзина
@@ -95,11 +106,18 @@ const store = createStore({
       }
     },
 
-    async addToFavorite({ commit }, item) {
+    async addToFavorite({ commit, state }, item) {
       try {
-        if (!item.isFavorite) {
+        const existingFavorite = state.favorites.find((fav) => fav.parentId === item.id)
+
+        if (!existingFavorite) {
+          // Добавляем в закладки
           const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/favorites', {
             parentId: item.id,
+          })
+          commit('addToFavorites', {
+            favoriteId: data.id,
+            productId: item.id,
           })
           commit('updateItem', {
             id: item.id,
@@ -109,7 +127,9 @@ const store = createStore({
             },
           })
         } else {
-          await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${item.favoriteId}`)
+          // Удаляем из закладок
+          await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${existingFavorite.id}`)
+          commit('removeFromFavorites', existingFavorite.id)
           commit('updateItem', {
             id: item.id,
             updates: {

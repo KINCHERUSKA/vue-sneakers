@@ -1,10 +1,9 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 
 import DrawerList from '../components/DrawerItems/DrawerList.vue'
 
-const localName = 'корзина'
 const store = useStore()
 
 const items = computed(() => store.state.items)
@@ -19,6 +18,13 @@ const fetchCardItems = () => {
       return product ? { ...product, orderId: order.id } : null
     })
     .filter(Boolean)
+}
+
+const addToFavorite = (item) => {
+  store.dispatch('addToFavorite', item)
+}
+const addTocard = (item) => {
+  store.dispatch('addToCard', item)
 }
 
 const totalPrice = computed(() => cardItems.value.reduce((acc, item) => acc + item.price, 0))
@@ -40,21 +46,27 @@ const CreateOrder = async () => {
     console.log(err)
   } */
 }
-/* 
-defineProps({
-  name: String,
-}) */
 
 onMounted(async () => {
+  fetchCardItems()
+})
+
+watch((cardItems) => {
   fetchCardItems()
 })
 </script>
 
 <template>
-  <div v-if="cardItems.length > 0" class="grid grid-cols-3 gap-8 font-regular text-2xl w-full">
-    <!--     <span class="col-span-2"> {{ name + ' / ' }}{{ localName }} </span> -->
-
-    <DrawerList class="col-span-2" :items="cardItems" />
+  <div
+    v-if="cardItems.length > 0"
+    class="grid grid-cols-3 gap-8 font-regular text-2xl w-full h-full py-[85px]"
+  >
+    <DrawerList
+      class="col-span-2"
+      :items="cardItems"
+      @add-to-favorite="addToFavorite"
+      @add-to-card="addTocard"
+    />
 
     <div class="flex flex-col justify-start items-center w-full gap-8">
       <div
@@ -87,7 +99,7 @@ onMounted(async () => {
     </div>
   </div>
 
-  <div v-else class="flex flex-col gap-8 items-center">
+  <div v-else class="flex flex-col gap-8 items-center min-h-[70vh] justify-center py-[85px]">
     <span class="text-4xl">Здесь пусто!</span>
     <router-link to="/">
       <div

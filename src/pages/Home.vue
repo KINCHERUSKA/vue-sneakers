@@ -4,6 +4,7 @@ import { useStore } from 'vuex'
 import CardList from '../components/CardListItems/CardL.vue'
 import Delivery from '../components/MainPage/Delivery.vue'
 import Action from '../components/MainPage/Action.vue'
+import HeaderMain from '../components/MainPage/HeaderMain.vue'
 
 const store = useStore()
 
@@ -16,6 +17,7 @@ const addTocard = (item) => {
 </script>
 
 <template>
+  <HeaderMain class="w-screen" />
   <!-- Описание бренда -->
   <div class="flex w-full justify-between items-center">
     <img src="/sneakers/9c79bce5f9246f9783d0494819cdff9d.jpg" class="mr-[170px]" alt="" />
