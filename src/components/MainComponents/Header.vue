@@ -30,13 +30,7 @@
         КОРЗИНА
       </router-link>
 
-      <router-link v-if="$store.state.isLogged" to="/my"
-        ><div class="flex justify-center">
-          <button class="hover:-translate-y-2 transition-transform">
-            <img src="/profile.svg" alt="" class="w-6 h-6 text-white filter brightness-0 invert" />
-          </button></div
-      ></router-link>
-      <router-link v-else to="/registrarion"
+      <router-link to="/login"
         ><div class="flex justify-center">
           <button class="hover:-translate-y-2 transition-transform">
             <img src="/profile.svg" alt="" class="w-6 h-6 text-white filter brightness-0 invert" />

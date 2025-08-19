@@ -11,6 +11,7 @@ import Favorites from './pages/Favorites.vue'
 import store from './store'
 import My from './pages/My.vue'
 import Registration from './pages/Registration.vue'
+import LogIn from './pages/LogIn.vue'
 
 const app = createApp(App)
 
@@ -20,6 +21,7 @@ const routes = [
   { path: '/favorites', name: 'Favorites', component: Favorites },
   { path: '/my', name: 'lk', component: My },
   { path: '/registration', name: 'registration', component: Registration },
+  { path: '/login', name: 'login', component: LogIn},
 ]
 
 const router = createRouter({
