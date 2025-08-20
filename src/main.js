@@ -13,15 +13,34 @@ import My from './pages/My.vue'
 import Registration from './pages/Registration.vue'
 import LogIn from './pages/LogIn.vue'
 
+import MainLayout from './Layouts/MainLayout.vue'
+import AuthLayout from './Layouts/AuthLayout.vue'
+import PostRegistration from './pages/PostRegistration.vue'
+import ResetPassword from './pages/resetPassword.vue'
+
 const app = createApp(App)
 
 const routes = [
-  { path: '/', name: 'Home', component: Home },
-  { path: '/drawer', name: 'Drawer', component: Drawer },
-  { path: '/favorites', name: 'Favorites', component: Favorites },
-  { path: '/my', name: 'lk', component: My },
-  { path: '/registration', name: 'registration', component: Registration },
-  { path: '/login', name: 'login', component: LogIn},
+  {
+    path: '/',
+    component: MainLayout,
+    children: [
+      { path: '', name: 'Home', component: Home },
+      { path: 'drawer', name: 'Drawer', component: Drawer },
+      { path: 'favorites', name: 'Favorites', component: Favorites },
+      { path: 'my', name: 'lk', component: My },
+    ],
+  },
+  {
+    path: '/auth',
+    component: AuthLayout,
+    children: [
+      { path: 'registration', name: 'registration', component: Registration },
+      { path: 'login', name: 'login', component: LogIn },
+      { path: 'pr', name: 'postregistration', component: PostRegistration },
+      { path: 'resetPassword', name: 'resetPassword', component: ResetPassword },
+    ],
+  },
 ]
 
 const router = createRouter({

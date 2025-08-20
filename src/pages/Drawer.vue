@@ -32,23 +32,19 @@ const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
 const absolutePrice = computed(() => totalPrice.value - vatPrice.value)
 
 const CreateOrder = async () => {
-  /* try {
-    const { data } = await axios.post(`https://e0c9bc90f123d6dd.mokky.dev/orders`, {
-      items: card.value,
-      absolutePrice: absolutePrice.value,
-    })
-    while (card.value.length > 0) {
-      removeFromCard(card.value[0])
-    }
+  localStorage.setItem('access_token', '123456')
+  const token = localStorage.getItem('access_token')
 
-    return data
-  } catch (err) {
-    console.log(err)
-  } */
+  if (token === null) {
+    store.commit('setIsLogged', false)
+  } else {
+    store.commit('setIsLogged', true)
+  }
 }
 
 onMounted(async () => {
   fetchCardItems()
+  CreateOrder()
 })
 
 watch((cardItems) => {

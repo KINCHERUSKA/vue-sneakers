@@ -9,12 +9,15 @@ const store = createStore({
       newItems: [],
       popularItems: [],
       favorites: [],
-      isLogged: Boolean,
+      isLogged: false,
     }
   },
   mutations: {
     setItems(state, items) {
       state.items = items
+    },
+    setLog(state, status) {
+      state.isLogged = status
     },
     setNewItems(state, items) {
       state.newItems = items
