@@ -13,11 +13,11 @@ const store = createStore({
     }
   },
   mutations: {
-    setItems(state, items) {
-      state.items = items
-    },
     setLog(state, status) {
       state.isLogged = status
+    },
+    setItems(state, items) {
+      state.items = items
     },
     setNewItems(state, items) {
       state.newItems = items
@@ -78,6 +78,14 @@ const store = createStore({
     },
   },
   actions: {
+    // Проверка пользователя
+    /*     async tokenChek({ commit }) {
+      try {
+      } catch (err){
+        console.log('Ощибка авторизации')
+      }
+    }, */
+
     //Получение данных
     async fetchItems({ commit }) {
       try {

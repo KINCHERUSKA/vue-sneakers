@@ -17,6 +17,7 @@ import MainLayout from './Layouts/MainLayout.vue'
 import AuthLayout from './Layouts/AuthLayout.vue'
 import PostRegistration from './pages/PostRegistration.vue'
 import ResetPassword from './pages/resetPassword.vue'
+import Order from './pages/Order.vue'
 
 const app = createApp(App)
 
@@ -39,6 +40,7 @@ const routes = [
       { path: 'login', name: 'login', component: LogIn },
       { path: 'pr', name: 'postregistration', component: PostRegistration },
       { path: 'resetPassword', name: 'resetPassword', component: ResetPassword },
+      { path: 'order', name: 'order', component: Order },
     ],
   },
 ]

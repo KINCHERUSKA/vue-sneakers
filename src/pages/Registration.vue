@@ -1,11 +1,12 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 import ErrorMassege from '@/components/errorMassege.vue'
 
+const router = useRouter()
 const error = ref('')
-
 const passwordChek = ref('')
 
 const regData = ref({
@@ -30,7 +31,7 @@ const chekPasswords = () => {
 }
 
 const sendData = async () => {
-  if (!regData.value.password || !regData.value.email) {
+  if (regData.value.password === '' || regData.value.email === '') {
     error.value = 'Заполните обязательные поля'
     return
   } else {
@@ -42,7 +43,7 @@ const sendData = async () => {
         lastName: regData.value.lastName,
       })
 
-      router.push('/auth/login')
+      router.push('/auth/pr')
     } catch (err) {
       if (err.response) {
         const status = err.response.status
@@ -111,7 +112,7 @@ const sendData = async () => {
     <div class="flex flex-col gap-2 w-full">
       <span class="font-bold text-xl">Пароль</span>
       <input
-        @focusout="(chekPasswordLength(), setError())"
+        @focusout="chekPasswordLength()"
         v-model="regData.password"
         type="password"
         class="px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300"
@@ -121,7 +122,7 @@ const sendData = async () => {
     <div class="flex flex-col gap-2 w-full">
       <span class="font-bold text-xl">Повторите пароль</span>
       <input
-        @focusout="(chekPasswords(), setError())"
+        @focusout="chekPasswords()"
         v-model="passwordChek"
         type="password"
         class="px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-white transition-all duration-300"
@@ -129,13 +130,11 @@ const sendData = async () => {
       />
     </div>
 
-    <router-link to="/auth/pr" class="w-full">
-      <button
-        @click="sendData()"
-        class="font-bold text-2xl flex justify-center w-full border border-white py-2 transition-all duration-300 hover:text-black hover:border-black hover:bg-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-white"
-      >
-        Зарегистрироваться
-      </button>
-    </router-link>
+    <button
+      @click="sendData()"
+      class="font-bold text-2xl flex justify-center w-full border border-white py-2 transition-all duration-300 hover:text-black hover:border-black hover:bg-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-white"
+    >
+      Зарегистрироваться
+    </button>
   </div>
 </template>

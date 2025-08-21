@@ -1,10 +1,12 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 import DrawerList from '../components/DrawerItems/DrawerList.vue'
 
 const store = useStore()
+const router = useRouter()
 
 const items = computed(() => store.state.items)
 const card = computed(() => store.state.card)
@@ -32,19 +34,15 @@ const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
 const absolutePrice = computed(() => totalPrice.value - vatPrice.value)
 
 const CreateOrder = async () => {
-  localStorage.setItem('access_token', '123456')
-  const token = localStorage.getItem('access_token')
-
-  if (token === null) {
-    store.commit('setIsLogged', false)
+  if (store.state.isLogged) {
+    router.push('/auth/order')
   } else {
-    store.commit('setIsLogged', true)
+    router.push('/auth/login')
   }
 }
 
 onMounted(async () => {
   fetchCardItems()
-  CreateOrder()
 })
 
 watch((cardItems) => {

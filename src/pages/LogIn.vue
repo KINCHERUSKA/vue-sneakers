@@ -3,6 +3,9 @@ import { useStore } from 'vuex'
 import { ref } from 'vue'
 import axios from 'axios'
 import ErrorMassege from '@/components/errorMassege.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const passwordInputType = ref('password')
 const passwordValue = ref('')
@@ -23,13 +26,6 @@ const sendData = async () => {
         password: passwordValue.value,
         rememberMe: rememberMe.value,
       })
-
-      /*       const userData = response.data
-      if (rememberMe.value) {
-        localStorage.setItem('user', JSON.stringify(userData))
-      } else {
-        sessionStorage.setItem('user', JSON.stringify(userData))
-      } */
 
       store.commit('setLog', true)
 
