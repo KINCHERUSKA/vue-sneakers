@@ -10,7 +10,7 @@ const router = useRouter()
 const passwordInputType = ref('password')
 const passwordValue = ref('')
 const emailValue = ref('')
-const rememberMe = ref('')
+const rememberMe = ref(false)
 const error = ref('')
 
 const store = useStore()
@@ -21,8 +21,8 @@ const sendData = async () => {
     return
   } else {
     try {
-      const response = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/users', {
-        user: emailValue.value,
+      const response = await axios.post('https://localhost:7018/auth/login', {
+        email: emailValue.value,
         password: passwordValue.value,
         rememberMe: rememberMe.value,
       })

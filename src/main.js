@@ -18,6 +18,7 @@ import AuthLayout from './Layouts/AuthLayout.vue'
 import PostRegistration from './pages/PostRegistration.vue'
 import ResetPassword from './pages/resetPassword.vue'
 import Order from './pages/Order.vue'
+import SetNewPassword from './pages/SetNewPassword.vue'
 
 const app = createApp(App)
 
@@ -41,6 +42,7 @@ const routes = [
       { path: 'pr', name: 'postregistration', component: PostRegistration },
       { path: 'resetPassword', name: 'resetPassword', component: ResetPassword },
       { path: 'order', name: 'order', component: Order },
+      { path: 'newPassword', name: 'newPassword', component: SetNewPassword },
     ],
   },
 ]
