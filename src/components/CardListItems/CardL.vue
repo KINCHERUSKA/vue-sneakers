@@ -1,7 +1,7 @@
 <script setup>
 import Card from './Card.vue'
 
-defineProps({
+const props = defineProps({
   items: Array,
 })
 
@@ -18,10 +18,10 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
       :key="item.id"
       :id="item.id"
       :title="item.name"
-      :image-url="item.imageUrl"
+      :productImages="item.productImages"
       :is-favorite="item.isFavorite"
       :is-added="item.isAdded"
-      :on-click-add="() => emit('addToCard', item)"
+      :on-click-add="() => emit('addToCard', item, size)"
       :on-click-favorite="() => emit('addToFavorite', item)"
     />
   </div>

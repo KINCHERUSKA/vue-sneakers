@@ -17,10 +17,8 @@ const ChekUser = () => {
 //onMounted(ChekUser())
 
 onMounted(async () => {
-  await store.dispatch('fetchItems')
   await store.dispatch('fetchFavorites')
   await store.dispatch('fetchCard')
-  await store.dispatch('fetchHomePage')
 })
 </script>
 

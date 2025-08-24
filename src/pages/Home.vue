@@ -1,5 +1,6 @@
 <script setup>
 import { useStore } from 'vuex'
+import { onBeforeMount, ref } from 'vue'
 
 import CardList from '../components/CardListItems/CardL.vue'
 import Delivery from '../components/MainPage/Delivery.vue'
@@ -14,6 +15,19 @@ const addToFavorite = (item) => {
 const addTocard = (item) => {
   store.dispatch('addToCard', item)
 }
+
+const isLoading = ref(true)
+
+onBeforeMount(async () => {
+  try {
+    await Promise.all([store.dispatch('fetchPopular'), store.dispatch('fetchNew')])
+    isLoading.value = false
+  } catch (error) {
+    console.error('Ошибка загрузки данных:', error)
+    isLoading.value = false
+    // Обработка ошибки
+  }
+})
 </script>
 
 <template>
@@ -39,7 +53,12 @@ const addTocard = (item) => {
     >
   </div>
 
+  <div v-if="isLoading">
+    <div class="spinner"></div>
+    <p>Загружаем лучшие товары...</p>
+  </div>
   <CardList
+    v-else
     :items="$store.state.newItems"
     @add-to-favorite="addToFavorite"
     @add-to-card="addTocard"
@@ -53,7 +72,12 @@ const addTocard = (item) => {
     >
   </div>
 
+  <div v-if="isLoading">
+    <div class="spinner"></div>
+    <p>Загружаем лучшие товары...</p>
+  </div>
   <CardList
+    v-else
     :items="$store.state.popularItems"
     @add-to-favorite="addToFavorite"
     @add-to-card="addTocard"

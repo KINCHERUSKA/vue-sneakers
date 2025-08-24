@@ -1,13 +1,32 @@
 <script setup>
-defineProps({
+import { onMounted, ref, watch } from 'vue'
+
+const props = defineProps({
   id: Number,
   title: String,
-  imageUrl: String,
+  productImages: Array,
   isFavorite: Boolean,
   isAdded: Boolean,
   onClickAdd: Function,
   onClickFavorite: Function,
 })
+
+const imageUrl = ref('')
+
+const setImage = () => {
+  if (!props.productImages || props.productImages.length === 0) {
+    imageUrl.value = '/order-success-icon.png'
+    return
+  }
+
+  const mainImage = props.productImages.find((img) => img.isMain)
+  imageUrl.value = mainImage?.url || props.productImages[0].url
+  console.log
+}
+
+onMounted(setImage)
+
+watch(() => props.productImages, setImage)
 </script>
 
 <template>

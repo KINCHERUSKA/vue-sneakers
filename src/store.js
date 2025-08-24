@@ -19,11 +19,13 @@ const store = createStore({
     setItems(state, items) {
       state.items = items
     },
+
+    // Главная страница
     setNewItems(state, items) {
       state.newItems = items
     },
-    setPopularItems(state, items) {
-      state.popularItems = items
+    setPopularItems(state, item) {
+      state.popularItems = item
     },
 
     //Закладки
@@ -86,6 +88,28 @@ const store = createStore({
       }
     }, */
 
+    //получение поп товаров
+    async fetchPopular({ commit }) {
+      try {
+        const { data } = await axios.get(`https://localhost:7018/featuredProducts/popular?limit=4`)
+        commit('setPopularItems', data)
+      } catch (err) {
+        console.log('Ошибка при загрузке данных:', err)
+      }
+    },
+
+    //получение новинок
+    async fetchNew({ commit }) {
+      try {
+        const { data } = await axios.get(
+          `https://localhost:7018/featuredProducts/new?limit=4&days=30`,
+        )
+        commit('setNewItems', data)
+      } catch (err) {
+        console.log('Ошибка при загрузке данных:', err)
+      }
+    },
+
     //Получение данных
     async fetchItems({ commit }) {
       try {
@@ -100,11 +124,6 @@ const store = createStore({
       } catch (err) {
         console.log('Ошибка при загрузке данных:', err)
       }
-    },
-
-    async fetchHomePage({ commit }) {
-      commit('setNewItems', getRandomItems(this.state.items, 4))
-      commit('setPopularItems', getRandomItems(this.state.items, 4))
     },
 
     //Работа с закладками
@@ -194,13 +213,13 @@ const store = createStore({
   },
 })
 
-function getRandomItems(array, count) {
+/* function getRandomItems(array, count) {
   const shuffled = [...array]
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
   }
   return shuffled.slice(0, count)
-}
+} */
 
 export default store

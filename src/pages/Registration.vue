@@ -17,7 +17,7 @@ const regData = ref({
 })
 
 const chekPasswordLength = () => {
-  if (regData.value.password.length <= 8) {
+  if (regData.value.password.length < 8) {
     error.value = 'Пароль должен содержать не менее 8 символов'
     return
   }
@@ -36,7 +36,7 @@ const sendData = async () => {
     return
   } else {
     try {
-      const response = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/createUsers', {
+      const response = await axios.post('https://localhost:7018/users', {
         email: regData.value.email,
         password: regData.value.password,
         firstName: regData.value.firstName,
@@ -45,6 +45,7 @@ const sendData = async () => {
 
       router.push('/auth/pr')
     } catch (err) {
+      /*       console.log(err.response) */
       if (err.response) {
         const status = err.response.status
         const data = err.response.data
