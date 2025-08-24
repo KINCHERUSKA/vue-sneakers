@@ -1,6 +1,9 @@
 <script setup>
 const props = defineProps({
-  text: String,
+  text: {
+    type: String,
+    default: 'Регистрация прошла успешно!',
+  },
 })
 </script>
 

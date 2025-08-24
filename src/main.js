@@ -39,7 +39,14 @@ const routes = [
     children: [
       { path: 'registration', name: 'registration', component: Registration },
       { path: 'login', name: 'login', component: LogIn },
-      { path: 'pr', name: 'postregistration', component: PostRegistration },
+      {
+        path: 'pr',
+        name: 'postregistration',
+        component: PostRegistration,
+        props: (route) => ({
+          text: route.query.text || 'И все готово!',
+        }),
+      },
       { path: 'resetPassword', name: 'resetPassword', component: ResetPassword },
       { path: 'order', name: 'order', component: Order },
       { path: 'newPassword', name: 'newPassword', component: SetNewPassword },

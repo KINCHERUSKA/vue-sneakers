@@ -43,7 +43,12 @@ const sendData = async () => {
         lastName: regData.value.lastName,
       })
 
-      router.push('/auth/pr')
+      router.push({
+        path: '/auth/pr',
+        query: {
+          text: 'Письмо с подтверждением уже на почте!',
+        },
+      })
     } catch (err) {
       /*       console.log(err.response) */
       if (err.response) {
