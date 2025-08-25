@@ -2,7 +2,6 @@
 import { onMounted } from 'vue'
 import { useStore } from 'vuex'
 
-const name = 'главная'
 const store = useStore()
 
 const ChekUser = () => {

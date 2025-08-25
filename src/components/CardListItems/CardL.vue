@@ -3,6 +3,11 @@ import Card from './Card.vue'
 
 const props = defineProps({
   items: Array,
+  context: {
+    type: String,
+    default: 'default',
+    validator: (value) => ['default', 'main'].includes(value),
+  },
 })
 
 const emit = defineEmits(['addToFavorite', 'addToCard'])
@@ -23,6 +28,15 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
       :is-added="item.isAdded"
       :on-click-add="() => emit('addToCard', item, size)"
       :on-click-favorite="() => emit('addToFavorite', item)"
+      v-bind="{
+        ...(context === 'main'
+          ? {}
+          : {
+              price: item.price,
+              promotionalPrice: item.promotionalPrice,
+              currency: item.currency,
+            }),
+      }"
     />
   </div>
 </template>

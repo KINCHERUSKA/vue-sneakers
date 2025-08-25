@@ -2,17 +2,17 @@
 
 <template>
   <!-- class="relative font-raleway text-white px-[200px] py-[85px] h-[880px] flex flex-col items-center relative bg-black" -->
-  <header class="bg-black w-full px-[200px] py-[40px]">
+  <header class="bg-black w-full px-[200px] py-[20px]">
     <nav class="grid grid-cols-5 items-center text-white grid-rows-1">
       <router-link
         to="/catalog"
-        class="font-medium text-2xl text-center hover:-translate-y-2 transition-transform cursor-pointer"
+        class="font-medium text-xl text-center hover:-translate-y-2 transition-transform cursor-pointer"
       >
         КАТАЛОГ</router-link
       >
       <router-link
         to="/favorites"
-        class="font-medium text-2xl text-center hover:-translate-y-2 transition-transform"
+        class="font-medium text-xl text-center hover:-translate-y-2 transition-transform"
       >
         ЗАКЛАДКИ</router-link
       >
@@ -25,7 +25,7 @@
       >
       <router-link
         to="/drawer"
-        class="font-medium text-2xl text-center hover:-translate-y-2 transition-transform"
+        class="font-medium text-xl text-center hover:-translate-y-2 transition-transform"
       >
         КОРЗИНА
       </router-link>
@@ -36,14 +36,14 @@
             <img
               src="/arrow-next.svg"
               alt=""
-              class="w-6 h-6 text-white filter brightness-0 invert"
+              class="w-4 h-4 text-white filter brightness-0 invert"
             />
           </button></div
       ></router-link>
       <router-link to="/my" v-else
         ><div class="flex justify-center">
           <button class="hover:-translate-y-2 transition-transform">
-            <img src="/profile.svg" alt="" class="w-6 h-6 text-white filter brightness-0 invert" />
+            <img src="/profile.svg" alt="" class="w-4 h-4 text-white filter brightness-0 invert" />
           </button></div
       ></router-link>
     </nav>

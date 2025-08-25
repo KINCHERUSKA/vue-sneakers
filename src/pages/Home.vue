@@ -53,13 +53,13 @@ onBeforeMount(async () => {
     >
   </div>
 
-  <div v-if="isLoading">
-    <div class="spinner"></div>
-    <p>Загружаем лучшие товары...</p>
+  <div v-if="isLoading" class="text-center py-12">
+    <div class="spinner border-t-2 border-black w-8 h-8 rounded-full animate-spin mx-auto"></div>
   </div>
   <CardList
     v-else
     :items="$store.state.newItems"
+    :context="'main'"
     @add-to-favorite="addToFavorite"
     @add-to-card="addTocard"
   />
@@ -72,12 +72,12 @@ onBeforeMount(async () => {
     >
   </div>
 
-  <div v-if="isLoading">
-    <div class="spinner"></div>
-    <p>Загружаем лучшие товары...</p>
+  <div v-if="isLoading" class="text-center py-12">
+    <div class="spinner border-t-2 border-black w-8 h-8 rounded-full animate-spin mx-auto"></div>
   </div>
   <CardList
     v-else
+    :context="'main'"
     :items="$store.state.popularItems"
     @add-to-favorite="addToFavorite"
     @add-to-card="addTocard"

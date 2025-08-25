@@ -1,5 +1,7 @@
 <script setup>
 import CardL from '@/components/CardListItems/CardL.vue'
+
+const GetUser = () => {}
 </script>
 
 <template>

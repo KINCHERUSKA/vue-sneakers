@@ -12,7 +12,6 @@ import store from './store'
 import My from './pages/My.vue'
 import Registration from './pages/Registration.vue'
 import LogIn from './pages/LogIn.vue'
-
 import MainLayout from './Layouts/MainLayout.vue'
 import AuthLayout from './Layouts/AuthLayout.vue'
 import PostRegistration from './pages/PostRegistration.vue'
@@ -31,6 +30,16 @@ const routes = [
       { path: 'drawer', name: 'Drawer', component: Drawer },
       { path: 'favorites', name: 'Favorites', component: Favorites },
       { path: 'my', name: 'lk', component: My },
+      {
+        path: '/catalog',
+        name: 'Catalog',
+        component: () => import('./pages/Catalog.vue'),
+      },
+      {
+        path: '/catalog/:gender',
+        name: 'CatalogGender',
+        component: () => import('./components/CatalogItems/CatalogGender.vue'),
+      },
     ],
   },
   {
