@@ -16,6 +16,7 @@ const ChekUser = () => {
 //onMounted(ChekUser())
 
 onMounted(async () => {
+  await store.dispatch('tokenChek')
   await store.dispatch('fetchFavorites')
   await store.dispatch('fetchCard')
 })

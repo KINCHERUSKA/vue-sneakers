@@ -27,6 +27,9 @@ const sendData = async () => {
         rememberMe: rememberMe.value,
       })
 
+      /*       const accessToken = response.data.accessToken
+      localStorage.setItem('accessToken', accessToken) */
+
       store.commit('setLog', true)
 
       router.push('/')

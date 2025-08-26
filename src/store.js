@@ -81,12 +81,22 @@ const store = createStore({
   },
   actions: {
     // Проверка пользователя
-    /*     async tokenChek({ commit }) {
+    async tokenChek({ commit, state }) {
       try {
-      } catch (err){
-        console.log('Ощибка авторизации')
+        const { data } = await axios.get('https://localhost:7018/auth/test-login')
+      } catch (err) {
+        if (err.response) {
+          const status = err.response.status
+          const data = err.response.data
+
+          if (status === 401) {
+            state.isLogged = false
+          }
+        }
+      } finally {
+        state.isLogged = true
       }
-    }, */
+    },
 
     //получение поп товаров
     async fetchPopular({ commit }) {
