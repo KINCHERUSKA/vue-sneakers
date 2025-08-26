@@ -18,6 +18,7 @@ import PostRegistration from './pages/PostRegistration.vue'
 import ResetPassword from './pages/resetPassword.vue'
 import Order from './pages/Order.vue'
 import SetNewPassword from './pages/SetNewPassword.vue'
+import Sneaker from './pages/Sneaker.vue'
 
 const app = createApp(App)
 
@@ -39,6 +40,14 @@ const routes = [
         path: '/catalog/:gender',
         name: 'CatalogGender',
         component: () => import('./components/CatalogItems/CatalogGender.vue'),
+      },
+      {
+        path: 'Sneaker',
+        name: 'Sneaker',
+        component: Sneaker,
+        props: (route) => ({
+          id: Number(route.query.id),
+        }),
       },
     ],
   },

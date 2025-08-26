@@ -54,14 +54,24 @@ watch(() => props.productImages, setImage)
   <div
     class="grid items-center justify-center cursor-pointer py-8 md:py-12 hover:-translate-y-2 transition relative font-raleway text-lg md:text-2xl font-normal items-center gap-[10px] hover:shadow-2xl hover:z-10"
   >
-    <img
-      @click="onClickFavorite"
-      :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
-      alt=""
-      class="z-20 absolute top-8 left-8 cursor-pointer transition"
-    />
-    <img :src="imageUrl" class="" alt="Sneakers" />
-    <span class="text-wrap text-center w-full px-4 break-words">{{ title }}</span>
+    <router-link
+      :to="{
+        name: 'Sneaker',
+        query: { id: props.id },
+      }"
+      class="-z-10 w-full"
+    >
+      <div class="w-full items-center jusify-center text-center">
+        <img
+          @click="onClickFavorite"
+          :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
+          alt=""
+          class="z-20 absolute top-8 left-8 cursor-pointer transition"
+        />
+        <img :src="imageUrl" class="" alt="Sneakers" />
+        <span class="text-center w-full px-4 break-words mt-2">{{ title }}</span>
+      </div>
+    </router-link>
 
     <div class="flex flex-col items-center w-full">
       <div class="flex items-baseline gap-2">

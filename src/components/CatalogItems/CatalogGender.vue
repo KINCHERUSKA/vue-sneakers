@@ -116,7 +116,7 @@ onMounted(getCategories)
 
     <div class="w-3/4">
       <!-- Заголовок -->
-      <div class="mb-6 flex justify-between items-center gap-8">
+      <div class="mb-6 flex justify-between items-center gap-8 text-nowrap">
         <h1 class="text-3xl font-bold text-gray-900">
           {{
             isDefaultView
@@ -125,7 +125,7 @@ onMounted(getCategories)
           }}
         </h1>
 
-        <div class="w-full flex items-center gap-4">
+        <div class="w-[500px] flex items-center gap-4 justify-end">
           <input
             type="text"
             class="px-4 border-black border border-2 w-full py-2 text-black transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-black"
