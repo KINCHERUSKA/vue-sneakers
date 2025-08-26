@@ -1,12 +1,45 @@
 <script setup>
+import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import api from '@/axios'
+
 import CardL from '@/components/CardListItems/CardL.vue'
 
-const GetUser = () => {}
+const router = useRouter()
+const store = useStore()
+const settings = ref(false)
+
+const addToFavorite = (item) => {
+  store.dispatch('addToFavorite', item)
+}
+const addTocard = (item) => {
+  store.dispatch('addToCard', item)
+}
+
+const Logout = async () => {
+  try {
+    await api.post('/auth/logout')
+
+    localStorage.removeItem('accessToken')
+    sessionStorage.removeItem('accessToken')
+
+    store.commit('setLog', false)
+
+    router.push('/')
+  } catch (err) {
+    localStorage.removeItem('accessToken')
+    sessionStorage.removeItem('accessToken')
+    store.commit('setLog', false)
+    router.push('/')
+    console.log(err)
+  }
+}
 </script>
 
 <template>
-  <div class="grid py-[45px] grid-cols-4 grid-rows-4 w-full gap-8 font-regular">
-    <div class="row-span-4 flex flex-col px-6 py-8 gap-6 bg-black text-white text-lg max-h-max">
+  <div class="grid py-[45px] grid-cols-4 grid-rows-6 w-full gap-8 font-regular" v-auto-animate>
+    <div class="row-span-5 flex flex-col px-6 py-8 gap-6 bg-black text-white text-lg max-h-max">
       <div class="flex gap-4 items-center">
         <img src="/profile.svg" alt="" class="h-6 w-6" />
         <span class="font-bold text-xl">Тут должно быть фио</span>
@@ -28,20 +61,31 @@ const GetUser = () => {}
       <div class="gap-1 flex flex-col">
         <span>Финансы</span>
         <div class="flex w-full bg-white text-black gap-3 p-3 cursor-pointer items-center">
-          <img src="/wallet.png" alt="" class="w-5 h-5"/>
+          <img src="/wallet.png" alt="" class="w-5 h-5" />
           <p>Способы оплаты</p>
         </div>
         <div class="flex w-full bg-white text-black gap-3 p-3 cursor-pointer items-center">
-          <img src="/secure-payment.png" alt="" class="w-5 h-5"/>
+          <img src="/secure-payment.png" alt="" class="w-5 h-5" />
           <p>Реквезиты</p>
         </div>
       </div>
 
       <div class="gap-1 flex flex-col">
         <span>Управление</span>
-        <div class="flex w-full bg-white text-black gap-3 p-3 cursor-pointer items-center">
+        <div
+          @click="
+            () => {
+              settings = !settings
+            }
+          "
+          class="flex w-full bg-white text-black gap-3 p-3 cursor-pointer items-center"
+        >
           <img src="/icons8-шестерня.svg" alt="" class="h-6 w-6" />
           <p>Настройки</p>
+        </div>
+        <div v-if="settings">
+          <router-link to=""> <p class="mt-2 cursor-pointer">Поменять почту</p></router-link>
+          <p class="mt-2 mb-2 cursor-pointer" @click="Logout()">Выйти из аккаунта</p>
         </div>
         <div class="flex w-full bg-white text-black gap-3 p-3 cursor-pointer items-center">
           <img src="/free-icon-monitor-1250704.png" alt="" class="w-4 h-4" />
@@ -74,24 +118,35 @@ const GetUser = () => {}
     <div class="col-span-3 flex gap-4 flex-col p-4 border border-black border-4">
       <span class="text-xl font-bold">Сервис и помощь</span>
       <div class="flex justify-between gap-4 h-full">
-        <div class="flex gap-3 bg-black text-white items-center px-6 py-4 w-full h-full cursor-pointer">
+        <div
+          class="flex gap-3 bg-black text-white items-center px-6 py-4 w-full h-full cursor-pointer"
+        >
           <img src="/icon-support-white.png" alt="" class="h-6 w-6" />
           <span>Написать в поддержку</span>
         </div>
-        <div class="flex gap-3 bg-black text-white items-center px-6 py-4 w-full h-full cursor-pointer">
+        <div
+          class="flex gap-3 bg-black text-white items-center px-6 py-4 w-full h-full cursor-pointer"
+        >
           <img src="/icons8-return-50.png" alt="" class="h-5 w-5" />
           <span>Вернуть товар</span>
         </div>
-        <div class="flex gap-3 bg-black text-white items-center px-6 py-4 w-full h-full cursor-pointer">
+        <div
+          class="flex gap-3 bg-black text-white items-center px-6 py-4 w-full h-full cursor-pointer"
+        >
           <img src="/icons8-вопросы-ответы-50.png" alt="" class="h-5 w-5" />
           <span>Частые вопросы</span>
         </div>
       </div>
     </div>
-    <div class="flex flex-col border border-black border-4 col-span-3 p-4">
+    <div class="flex flex-col border border-black border-4 col-span-3 p-4 row-span-2">
       <span class="font-bold text-xl">Возможно, вас заинтересует</span>
       <div>
-        <CardL />
+        <CardL
+          :items="$store.state.popularItems"
+          :context="'main'"
+          @add-to-favorite="addToFavorite"
+          @add-to-card="addTocard"
+        />
       </div>
     </div>
     <div class="flex justify-between items-center border border-black p-4 border-4 cursor-pointer">

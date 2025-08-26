@@ -1,7 +1,7 @@
 <script setup>
 import { useStore } from 'vuex'
 import { ref } from 'vue'
-import axios from 'axios'
+import api from '@/axios'
 import ErrorMassege from '@/components/errorMassege.vue'
 import { useRouter } from 'vue-router'
 
@@ -21,14 +21,19 @@ const sendData = async () => {
     return
   } else {
     try {
-      const response = await axios.post('https://localhost:7018/auth/login', {
+      const response = await api.post('/auth/login', {
         email: emailValue.value,
         password: passwordValue.value,
         rememberMe: rememberMe.value,
       })
 
-      /*       const accessToken = response.data.accessToken
-      localStorage.setItem('accessToken', accessToken) */
+      const accessToken = response.data.accessToken
+
+      localStorage.setItem('accessToken', accessToken)
+
+      sessionStorage.setItem('accessToken', accessToken)
+
+      api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
 
       store.commit('setLog', true)
 
@@ -109,14 +114,8 @@ const onClickShowPass = () => {
     <router-link to="/auth/resetPassword" class="w-full">
       <span>Восстановить пароль</span>
     </router-link>
-    <div class="flex items-center w-full">
-      <input
-        v-model="rememberMe"
-        class="mr-2 w-4 h-4 cursor-pointer"
-        type="checkbox"
-        id="rem"
-        @change="onClickShowPass"
-      />
+    <div class="flex items-center w-full z-20">
+      <input v-model="rememberMe" class="mr-2 w-4 h-4 cursor-pointer" type="checkbox" id="rem" />
       <label for="rem" class="cursor-pointer select-none">Запомнить меня</label>
     </div>
 

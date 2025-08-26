@@ -4,6 +4,8 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 
+import api from './axios'
+
 import App from './App.vue'
 import Home from './pages/Home.vue'
 import Drawer from './pages/Drawer.vue'
@@ -21,6 +23,8 @@ import SetNewPassword from './pages/SetNewPassword.vue'
 import Sneaker from './pages/Sneaker.vue'
 
 const app = createApp(App)
+
+app.config.globalProperties.$axios = api
 
 const routes = [
   {
@@ -75,6 +79,24 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken')
+
+  // Если есть токен, обновляем заголовок
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
+
+  // Проверяем необходимость авторизации
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+
+  if (requiresAuth && !token) {
+    next('/auth/login')
+  } else {
+    next()
+  }
 })
 
 app.use(router)
