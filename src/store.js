@@ -197,8 +197,6 @@ const store = createStore({
           console.log(data)
           commit('addToCard', {
             item: item,
-            quantity: quantity,
-            size: size,
           })
           commit('updateItem', {
             id: item.id,

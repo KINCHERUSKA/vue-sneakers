@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import DrawerList from '../components/DrawerItems/DrawerList.vue'
 
 const store = useStore()
-
+const router = useRouter()
 const card = computed(() => store.state.card)
 
 console.log(card)
