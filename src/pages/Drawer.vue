@@ -6,21 +6,10 @@ import { useRouter } from 'vue-router'
 import DrawerList from '../components/DrawerItems/DrawerList.vue'
 
 const store = useStore()
-const router = useRouter()
 
-const items = computed(() => store.state.items)
 const card = computed(() => store.state.card)
 
-const cardItems = ref([])
-
-const fetchCardItems = () => {
-  cardItems.value = card.value
-    .map((order) => {
-      const product = items.value.find((item) => item.id === order.parentId)
-      return product ? { ...product, orderId: order.id } : null
-    })
-    .filter(Boolean)
-}
+console.log(card)
 
 const addToFavorite = (item) => {
   store.dispatch('addToFavorite', item)
@@ -29,12 +18,25 @@ const addTocard = (item) => {
   store.dispatch('addToCard', item)
 }
 
-const totalPrice = computed(() => cardItems.value.reduce((acc, item) => acc + item.price, 0))
+const totalPrice = computed(() => {
+  return card.value.reduce((sum, item) => {
+    // Определяем текущую цену товара (учитываем акцию)
+    const currentPrice =
+      item.promotionalPrice && item.promotionalPrice > 0 && item.promotionalPrice < item.price
+        ? item.promotionalPrice
+        : item.price
+
+    // Умножаем на количество (если quantity не задан, считаем как 1)
+    const quantity = item.quantity || 1
+
+    return sum + currentPrice * quantity
+  }, 0)
+})
 const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
 const absolutePrice = computed(() => totalPrice.value - vatPrice.value)
 
-const CreateOrder = async () => {
-  if (store.state.isLogged) {
+const CreateOrder = () => {
+  if (computed(() => store.state.card)) {
     router.push('/auth/order')
   } else {
     router.push('/auth/login')
@@ -42,22 +44,18 @@ const CreateOrder = async () => {
 }
 
 onMounted(async () => {
-  fetchCardItems()
-})
-
-watch((cardItems) => {
-  fetchCardItems()
+  store.dispatch('fetchCard')
 })
 </script>
 
 <template>
   <div
-    v-if="cardItems.length > 0"
-    class="grid grid-cols-3 gap-8 font-regular text-2xl w-full h-full py-[85px]"
+    v-if="card.length > 0"
+    class="grid grid-cols-3 gap-8 font-regular text-2xl w-full h-full py-[85px] h-screen"
   >
     <DrawerList
       class="col-span-2"
-      :items="cardItems"
+      :items="card"
       @add-to-favorite="addToFavorite"
       @add-to-card="addTocard"
     />
@@ -75,7 +73,7 @@ watch((cardItems) => {
       <div class="flex flex-col gap-4 w-full">
         <div class="w-full flex justify-between">
           <span class="font-bold">Ваша корзина</span>
-          <span class="text-lg text-gray-400">{{ cardItems.length }} ед. товара</span>
+          <span class="text-lg text-gray-400">{{ card.length }} ед. товара</span>
         </div>
         <div class="w-full text-lg flex justify-between">
           <span>Товары </span>

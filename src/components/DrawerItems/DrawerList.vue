@@ -4,7 +4,7 @@ import DrawerItem from './DrawerItem.vue'
 
 const store = useStore()
 
-defineProps({
+const props = defineProps({
   items: Array,
 })
 
@@ -19,8 +19,12 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
       :id="item.id"
       :title="item.name"
       :price="item.price"
-      :image-url="item.imageUrl"
-      :is-favorite="item.isFavorite"
+      :productImages="item.productImages"
+      :promotionalPrice="item.promotionalPrice"
+      :currency="item.currency"
+      :quantity="item.quantity"
+      :size="item.size"
+      :is-favorite="item.isFavirite"
       :on-click-favorite="() => emit('addToFavorite', item)"
       :on-click-remove="() => emit('addToCard', item)"
     />

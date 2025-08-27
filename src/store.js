@@ -38,6 +38,7 @@ const store = createStore({
       // Также обновляем в newItems/popularItems если нужно
       state.newItems = state.newItems.map((i) => (i.id === id ? { ...i, ...updates } : i))
       state.popularItems = state.popularItems.map((i) => (i.id === id ? { ...i, ...updates } : i))
+      state.card = state.card.map((item) => (item.id === id ? { ...item, ...updates } : item))
     },
 
     setFavorites(state, favorites) {
@@ -64,8 +65,8 @@ const store = createStore({
       })) */
     },
 
-    addToCard(state, item) {
-      state.card.push(item)
+    addToCard(state, item, quantity, size) {
+      state.card.push(item, item.quantity, item.size)
     },
 
     removeFromCard(state, orderId) {
@@ -126,7 +127,6 @@ const store = createStore({
       try {
         const { data } = await api.get('/favoriteProducts')
         commit('setFavorites', data)
-        console.log(data)
       } catch (err) {
         console.error('Ошибка при загрузке избранного:', err)
       }
@@ -167,8 +167,21 @@ const store = createStore({
 
     async fetchCard({ commit }) {
       try {
-        const { data } = await api.get('https://localhost:7018/cart')
-        commit('setCard', data)
+        const { data } = await api.get('/cart')
+
+        const cartItems = data.value.map((item) => ({
+          id: item.productBriefInfo.id,
+          name: item.productBriefInfo.name,
+          price: item.productBriefInfo.price,
+          promotionalPrice: item.productBriefInfo.promotionalPrice,
+          currency: item.productBriefInfo.currency,
+          quantity: item.quantity,
+          productImages: item.productBriefInfo.productImages,
+          isFavirite: item.productBriefInfo.isFavirite,
+          isAdded: item.productBriefInfo.isAdded,
+        }))
+        console.log(cartItems)
+        commit('setCard', cartItems)
       } catch (err) {
         console.error('Ошибка при загрузке корзины:', err)
       }
@@ -177,14 +190,15 @@ const store = createStore({
     async addToCard({ commit, state }, item, quantity) {
       try {
         if (!item.isAdded) {
-          if (quantity === null) {
+          if (quantity === undefined) {
             quantity = 1
           }
-          const { data } = await api.post(
-            `https://localhost:7018/cart?productId=${item.id}&quantity=${quantity}`,
-          )
+          const { data } = await api.post(`/cart?productId=${item.id}&quantity=${quantity}`)
+          console.log(data)
           commit('addToCard', {
             item: item,
+            quantity: quantity,
+            size: size,
           })
           commit('updateItem', {
             id: item.id,
@@ -192,31 +206,13 @@ const store = createStore({
           })
         } else {
           // Удаляем из закладок
-          await api.delete(`https://localhost:7018/cart/${item.id}`)
+          await api.delete(`/cart/${item.id}`)
           commit('removeFromCard', item.id)
           commit('updateItem', {
             id: item.id,
             updates: {
               isFavirite: false,
             },
-          })
-        }
-      } catch (err) {
-        console.error('Ошибка при работе с избранным:', err)
-      }
-
-      try {
-        const existingOrder = state.card.find((order) => order.parentId === item.id)
-        if (!existingOrder) {
-          const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/orders', {
-            parentId: item.id,
-          })
-        } else {
-          await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/orders/${existingOrder.id}`)
-          commit('removeFromCard', existingOrder.id)
-          commit('updateItem', {
-            id: item.id,
-            updates: { isAdded: false },
           })
         }
       } catch (err) {

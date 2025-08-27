@@ -6,6 +6,10 @@ const props = defineProps({
   items: Array,
   context: {
     type: String,
+    quantity: {
+      type: Number,
+      default: 1,
+    },
     default: 'default',
     validator: (value) => ['default', 'main'].includes(value),
   },
@@ -27,7 +31,7 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
       :productImages="item.productImages"
       :is-favorite="item.isFavirite"
       :is-added="item.isAdded"
-      :on-click-add="() => emit('addToCard', item, size)"
+      :on-click-add="() => emit('addToCard', item, quantity)"
       :on-click-favorite="() => emit('addToFavorite', item)"
       v-bind="{
         ...(context === 'main'

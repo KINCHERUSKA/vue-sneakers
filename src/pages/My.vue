@@ -84,7 +84,9 @@ const Logout = async () => {
           <p>Настройки</p>
         </div>
         <div v-if="settings">
-          <router-link to=""> <p class="mt-2 cursor-pointer">Поменять почту</p></router-link>
+          <router-link to="/auth/newEmailQuery">
+            <p class="mt-2 cursor-pointer">Поменять почту</p></router-link
+          >
           <p class="mt-2 mb-2 cursor-pointer" @click="Logout()">Выйти из аккаунта</p>
         </div>
         <div class="flex w-full bg-white text-black gap-3 p-3 cursor-pointer items-center">

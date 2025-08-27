@@ -9,8 +9,10 @@ const error = ref('')
 const emailRecover = ref('')
 const newPassword = ref('')
 const isPosted = ref(false)
+
 const email = ref('')
 const token = ref('')
+const id = ref('')
 
 const passwordRecover = async () => {
   if (!emailRecover.value) {
@@ -18,10 +20,10 @@ const passwordRecover = async () => {
     return
   } else {
     try {
-      const response = await axios.post('https://localhost:7018/auth/reset-password', {
+      const response = await axios.post('https://localhost:7018/auth/confirm-email-change', {
         email: email.value,
         token: token.value,
-        newPassword: newPassword.value,
+        id: id.value,
       })
       isPosted.value = true
     } catch (err) {
@@ -45,9 +47,10 @@ const passwordRecover = async () => {
 
 onMounted(() => {
   // Проверяем наличие параметров в URL
-  if (route.query.email && route.query.token) {
+  if (route.query.email && route.query.token && route.email.id) {
     email.value = route.query.email
     token.value = route.query.token
+    id.value = route.query.id
   } else {
     error.value = 'Некорректная ссылка для восстановления пароля'
   }
@@ -67,7 +70,15 @@ onMounted(() => {
     </router-link>
 
     <ErrorMassege :error="error" @clear="error = ''" />
+    <div class="flex items-baseline gap-4 w-full">
+      <span class="font-bold text-xl w-full">Почта</span>
+    </div>
 
+    <input
+      v-model="emailRecover"
+      placeholder="ivan.ivanov@pochta.ru"
+      class="px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-white w-full"
+    />
     <div class="flex items-baseline gap-4 w-full">
       <span class="font-bold text-xl w-full">Новый пароль</span>
     </div>

@@ -21,6 +21,8 @@ import ResetPassword from './pages/resetPassword.vue'
 import Order from './pages/Order.vue'
 import SetNewPassword from './pages/SetNewPassword.vue'
 import Sneaker from './pages/Sneaker.vue'
+import SetNewEmail from './pages/SetNewEmail.vue'
+import EmailChange from './pages/EmailChange.vue'
 
 const app = createApp(App)
 
@@ -72,6 +74,8 @@ const routes = [
       { path: 'resetPassword', name: 'resetPassword', component: ResetPassword },
       { path: 'order', name: 'order', component: Order },
       { path: 'newPassword', name: 'newPassword', component: SetNewPassword },
+      { path: 'newEmail', name: 'newEmail', component: SetNewEmail },
+      { path: 'newEmailQuery', name: 'newEmailQuery', component: EmailChange },
     ],
   },
 ]

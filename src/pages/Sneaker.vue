@@ -15,6 +15,8 @@ const error = ref(null)
 const sneakerData = ref(null)
 const currentImage = ref('')
 
+const selectedSize = ref(null)
+
 const sizes = ref([
   { value: 36, available: false },
   { value: 37, available: false },
@@ -85,6 +87,18 @@ const addToFavorite = () => {
   store.dispatch('addToFavorite', sneakerData.value)
 }
 
+const addTocard = () => {
+  if (!selectedSize.value) {
+    alert('Пожалуйста, выберите размер')
+    return
+  }
+  store.dispatch('addToCard', {
+    item: sneakerData.value,
+    count,
+    size: selectedSize.value,
+  })
+}
+
 onMounted(getSneaker)
 </script>
 
@@ -132,7 +146,7 @@ onMounted(getSneaker)
       <div class="flex justify-between items-center bg-black text-white px-5 py-2 w-full">
         <span class="text-2xl font-bold">{{ sneakerData.name }}</span>
         <img
-          @click="addToFavorite()"
+          @click="addToFavorite"
           :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
           alt=""
           class="cursor-pointer transition p-1 w-6 h-6"
@@ -161,10 +175,7 @@ onMounted(getSneaker)
 
         <div class="flex items-center w-full gap-3">
           <div class="flex justify-center h-fit cursor-pointer">
-            <div
-              @click="onClickAdd"
-              class="border border-black px-3 lg:px-6 py-1 whitespace-nowrap"
-            >
+            <div @click="addTocard" class="border border-black px-3 lg:px-6 py-1 whitespace-nowrap">
               <span class="text-2xl">{{ isAdded ? 'добавлено' : 'в корзину' }}</span>
             </div>
           </div>

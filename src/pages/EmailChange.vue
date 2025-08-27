@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import PostRegistration from './PostRegistration.vue'
 import ErrorMassege from '@/components/errorMassege.vue'
 
@@ -9,8 +9,6 @@ const error = ref('')
 const emailRecover = ref('')
 const newPassword = ref('')
 const isPosted = ref(false)
-const email = ref('')
-const token = ref('')
 
 const passwordRecover = async () => {
   if (!emailRecover.value) {
@@ -18,9 +16,7 @@ const passwordRecover = async () => {
     return
   } else {
     try {
-      const response = await axios.post('https://localhost:7018/auth/reset-password', {
-        email: email.value,
-        token: token.value,
+      const response = await axios.post('https://localhost:7018/auth/change-email', {
         newPassword: newPassword.value,
       })
       isPosted.value = true
@@ -42,16 +38,6 @@ const passwordRecover = async () => {
     }
   }
 }
-
-onMounted(() => {
-  // Проверяем наличие параметров в URL
-  if (route.query.email && route.query.token) {
-    email.value = route.query.email
-    token.value = route.query.token
-  } else {
-    error.value = 'Некорректная ссылка для восстановления пароля'
-  }
-})
 </script>
 
 <template>
@@ -69,11 +55,11 @@ onMounted(() => {
     <ErrorMassege :error="error" @clear="error = ''" />
 
     <div class="flex items-baseline gap-4 w-full">
-      <span class="font-bold text-xl w-full">Новый пароль</span>
+      <span class="font-bold text-xl w-full">Старая почта</span>
     </div>
     <input
       v-model="newPassword"
-      placeholder="что то менее серкетное)"
+      placeholder="что будем менять?"
       class="px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-white w-full"
     />
 
@@ -81,7 +67,7 @@ onMounted(() => {
       @click="passwordRecover()"
       class="font-bold text-2xl flex justify-center w-full border border-white py-2 transition-all duration-300 hover:text-black hover:border-black hover:bg-white active:scale-95 focus:outline-none focus:ring-2 focus:ring-white"
     >
-      Восстановить
+      поменять
     </button>
   </div>
   <div v-else>
