@@ -1,24 +1,13 @@
 <script setup lang="ts">
 import { useStore } from 'vuex'
 import { computed, onMounted, ref, watch } from 'vue'
+import api from '@/axios'
 
 import CardList from '../components/CardListItems/CardL.vue'
 
 const store = useStore()
 
-const items = computed(() => store.state.items)
 const favorites = computed(() => store.state.favorites)
-
-const favoriteItems = ref([])
-
-const fetchFavoreiteItems = () => {
-  favoriteItems.value = favorites.value
-    .map((fav) => {
-      const product = items.value.find((item) => item.id === fav.parentId)
-      return product ? { ...product, favId: fav.id } : null
-    })
-    .filter(Boolean)
-}
 
 const addToFavorite = (item) => {
   store.dispatch('addToFavorite', item)
@@ -28,17 +17,13 @@ const addTocard = (item) => {
 }
 
 onMounted(async () => {
-  fetchFavoreiteItems()
-})
-
-watch((favoriteItems) => {
-  fetchFavoreiteItems()
+  store.dispatch('fetchFavorites')
 })
 </script>
 
 <template>
-  <div v-if="favoriteItems.length > 0" class="min-h-[70vh] mt-20">
-    <CardList :items="favoriteItems" @add-to-favorite="addToFavorite" @add-to-card="addTocard" />
+  <div v-if="favorites.length > 0" class="min-h-[70vh] mt-20">
+    <CardList :items="favorites" @add-to-favorite="addToFavorite" @add-to-card="addTocard" />
   </div>
 
   <div v-else class="flex flex-col gap-8 items-center min-h-[70vh] justify-center py-[85px]">

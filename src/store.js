@@ -42,17 +42,10 @@ const store = createStore({
 
     setFavorites(state, favorites) {
       state.favorites = favorites
-
-      const favIds = new Set(favorites.map((fav) => fav.parentId))
-      state.items = state.items.map((item) => ({
-        ...item,
-        isFavorite: favIds.has(item.id),
-        favoriteId: favorites.find((f) => f.parentId === item.id)?.id || null,
-      }))
     },
 
-    addToFavorites(state, { favoriteId, productId }) {
-      state.favorites.push({ id: favoriteId, parentId: productId })
+    addToFavorites(state, item) {
+      state.favorites.push(item)
     },
 
     // Удаление из закладок
@@ -98,11 +91,11 @@ const store = createStore({
           const data = err.response.data
 
           if (status === 401) {
-            state.isLogged = false
+            commit('setLog', false)
           }
         }
       } finally {
-        state.isLogged = true
+        commit('setLog', true)
       }
     },
 
@@ -127,28 +120,15 @@ const store = createStore({
         console.log('Ошибка при загрузке данных:', err)
       }
     },
-    /* 
+
     //Получение данных
-    async fetchItems({ commit }) {
-      try {
-        const { data } = await axios.get('https://e0c9bc90f123d6dd.mokky.dev/sale')
-        const items = data.map((obj) => ({
-          ...obj,
-          isFavorite: false,
-          favoriteId: null,
-          isAdded: false,
-        }))
-        commit('setItems', items)
-      } catch (err) {
-        console.log('Ошибка при загрузке данных:', err)
-      }
-    },
 
     //Работа с закладками
     async fetchFavorites({ commit }) {
       try {
-        const { data } = await axios.get('https://e0c9bc90f123d6dd.mokky.dev/favorites')
+        const { data } = await api.get('/favoriteProducts')
         commit('setFavorites', data)
+        console.log(data)
       } catch (err) {
         console.error('Ошибка при загрузке избранного:', err)
       }
@@ -156,33 +136,27 @@ const store = createStore({
 
     async addToFavorite({ commit, state }, item) {
       try {
-        const existingFavorite = state.favorites.find((fav) => fav.parentId === item.id)
-
-        if (!existingFavorite) {
-          // Добавляем в закладки
-          const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/favorites', {
-            parentId: item.id,
-          })
+        if (!item.isFavirite) {
+          const { data } = await api.post(
+            `https://localhost:7018/favoriteProducts?productId=${item.id}`,
+          )
           commit('addToFavorites', {
-            favoriteId: data.id,
-            productId: item.id,
+            item: item,
           })
           commit('updateItem', {
             id: item.id,
             updates: {
-              isFavorite: true,
-              favoriteId: data.id,
+              isFavirite: true,
             },
           })
         } else {
           // Удаляем из закладок
-          await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/favorites/${existingFavorite.id}`)
-          commit('removeFromFavorites', existingFavorite.id)
+          await api.delete(`/favoriteProducts/${item.id}`)
+          commit('removeFromFavorites', item.id)
           commit('updateItem', {
             id: item.id,
             updates: {
-              isFavorite: false,
-              favoriteId: null,
+              isFavirite: false,
             },
           })
         }
@@ -190,7 +164,7 @@ const store = createStore({
         console.error('Ошибка при работе с избранным:', err)
       }
     },
-
+    /* 
     //Работа с корзиной
     async fetchCard({ commit }) {
       try {

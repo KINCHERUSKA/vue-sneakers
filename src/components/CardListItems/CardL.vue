@@ -1,5 +1,6 @@
 <script setup>
 import Card from './Card.vue'
+import api from '@/axios'
 
 const props = defineProps({
   items: Array,
@@ -24,7 +25,7 @@ const emit = defineEmits(['addToFavorite', 'addToCard'])
       :id="item.id"
       :title="item.name"
       :productImages="item.productImages"
-      :is-favorite="item.isFavorite"
+      :is-favorite="item.isFavirite"
       :is-added="item.isAdded"
       :on-click-add="() => emit('addToCard', item, size)"
       :on-click-favorite="() => emit('addToFavorite', item)"

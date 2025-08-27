@@ -1,6 +1,6 @@
 <script setup>
 import { useStore } from 'vuex'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 
 import CardList from '../components/CardListItems/CardL.vue'
 import Delivery from '../components/MainPage/Delivery.vue'
@@ -21,6 +21,7 @@ const isLoading = ref(true)
 onBeforeMount(async () => {
   try {
     await Promise.all([store.dispatch('fetchPopular'), store.dispatch('fetchNew')])
+    store.dispatch('fetchFavorites')
     isLoading.value = false
   } catch (error) {
     console.error('Ошибка загрузки данных:', error)
