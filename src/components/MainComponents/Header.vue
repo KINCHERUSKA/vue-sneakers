@@ -43,7 +43,7 @@
       <router-link to="/my" v-else
         ><div class="flex justify-center">
           <button class="hover:-translate-y-2 transition-transform">
-            <img src="/profile.svg" alt="" class="w-4 h-4 text-white filter brightness-0 invert" />
+            <img src="/profile.svg" alt="" class="w-5 h-5 text-white filter brightness-0 invert" />
           </button></div
       ></router-link>
     </nav>

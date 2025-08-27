@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import axios from 'axios'
+import api from '@/axios'
 
 const store = createStore({
   state() {
@@ -81,17 +81,36 @@ const store = createStore({
   },
   actions: {
     // Проверка пользователя
-    /*     async tokenChek({ commit }) {
+    async tokenChek({ commit }) {
       try {
-      } catch (err){
-        console.log('Ощибка авторизации')
+        const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken')
+
+        if (!token) {
+          commit('setLog', false)
+          return
+        }
+
+        await api.get('/auth/test-login') // ✅ Используем api
+        commit('setLog', true)
+      } catch (err) {
+        if (err.response) {
+          const status = err.response.status
+          const data = err.response.data
+
+          if (status === 401) {
+            state.isLogged = false
+          }
+        }
+      } finally {
+        state.isLogged = true
       }
-    }, */
+    },
 
     //получение поп товаров
     async fetchPopular({ commit }) {
       try {
-        const { data } = await axios.get(`https://localhost:7018/featuredProducts/popular?limit=4`)
+        // ✅ Используем api вместо axios
+        const { data } = await api.get('/featuredProducts/popular?limit=4')
         commit('setPopularItems', data)
       } catch (err) {
         console.log('Ошибка при загрузке данных:', err)
@@ -101,15 +120,14 @@ const store = createStore({
     //получение новинок
     async fetchNew({ commit }) {
       try {
-        const { data } = await axios.get(
-          `https://localhost:7018/featuredProducts/new?limit=4&days=30`,
-        )
+        // ✅ Используем api вместо axios
+        const { data } = await api.get('/featuredProducts/new?limit=4&days=30')
         commit('setNewItems', data)
       } catch (err) {
         console.log('Ошибка при загрузке данных:', err)
       }
     },
-
+    /* 
     //Получение данных
     async fetchItems({ commit }) {
       try {
@@ -209,7 +227,7 @@ const store = createStore({
       } catch (err) {
         console.error('Ошибка при работе с избранным:', err)
       }
-    },
+    }, */
   },
 })
 
