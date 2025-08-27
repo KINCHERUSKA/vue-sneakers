@@ -1,10 +1,13 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
+import { useStore } from 'vuex'
 
 const props = defineProps({
   id: Number,
 })
+
+const store = useStore()
 
 const loading = ref(true)
 const error = ref(null)
@@ -39,6 +42,8 @@ const getSneaker = async () => {
 
     const { data } = await axios.get(`https://localhost:7018/products/${props.id}`)
     sneakerData.value = data
+
+    console.log(sneakerData.value)
 
     if (sneakerData.value.promotionalPrice > sneakerData.value.price) {
       sneakerData.value.promotionalPrice = null
@@ -76,6 +81,10 @@ const selectImage = (imageUrl) => {
   currentImage.value = `https://localhost:7018/${imageUrl}`
 }
 
+const addToFavorite = () => {
+  store.dispatch('addToFavorite', sneakerData.value)
+}
+
 onMounted(getSneaker)
 </script>
 
@@ -91,11 +100,7 @@ onMounted(getSneaker)
       Повторить
     </button>
   </div>
-  <div
-    v-else
-    class="flex w-full py-[85px] gap-8 font-raleway"
-    v-auto-animate
-  >
+  <div v-else class="flex w-full py-[85px] gap-8 font-raleway" v-auto-animate>
     <!-- Колонка с миниатюрами -->
     <div class="flex space-x-2 overflow-x-auto mt-4 flex-col min-w-max">
       <img
@@ -127,8 +132,8 @@ onMounted(getSneaker)
       <div class="flex justify-between items-center bg-black text-white px-5 py-2 w-full">
         <span class="text-2xl font-bold">{{ sneakerData.name }}</span>
         <img
-          @click="onClickFavorite"
-          :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
+          @click="addToFavorite()"
+          :src="isFavorite ? '/like-2.svg' : '/like-1.svg'"
           alt=""
           class="cursor-pointer transition p-1 w-6 h-6"
         />
@@ -156,7 +161,10 @@ onMounted(getSneaker)
 
         <div class="flex items-center w-full gap-3">
           <div class="flex justify-center h-fit cursor-pointer">
-            <div @click="onClickAdd" class="border border-black px-3 lg:px-6 py-1 whitespace-nowrap">
+            <div
+              @click="onClickAdd"
+              class="border border-black px-3 lg:px-6 py-1 whitespace-nowrap"
+            >
               <span class="text-2xl">{{ isAdded ? 'добавлено' : 'в корзину' }}</span>
             </div>
           </div>

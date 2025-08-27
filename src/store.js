@@ -57,15 +57,15 @@ const store = createStore({
     setCard(state, cardItems) {
       state.card = cardItems
 
-      const prdIdIsIn = new Set(cardItems.map((item) => item.parentId))
+      /*       const prdIdIsIn = new Set(cardItems.map((item) => item.parentId))
       state.items = state.items.map((item) => ({
         ...item,
         isAdded: prdIdIsIn.has(item.id),
-      }))
+      })) */
     },
 
-    addToCard(state, { orderId, productId }) {
-      state.card.push({ id: orderId, parentId: productId })
+    addToCard(state, item) {
+      state.card.push(item)
     },
 
     removeFromCard(state, orderId) {
@@ -94,8 +94,6 @@ const store = createStore({
             commit('setLog', false)
           }
         }
-      } finally {
-        commit('setLog', true)
       }
     },
 
@@ -164,31 +162,54 @@ const store = createStore({
         console.error('Ошибка при работе с избранным:', err)
       }
     },
-    /* 
+
     //Работа с корзиной
+
     async fetchCard({ commit }) {
       try {
-        const { data } = await axios.get('https://e0c9bc90f123d6dd.mokky.dev/orders')
+        const { data } = await api.get('https://localhost:7018/cart')
         commit('setCard', data)
       } catch (err) {
         console.error('Ошибка при загрузке корзины:', err)
       }
     },
 
-    async addToCard({ commit, state }, item) {
+    async addToCard({ commit, state }, item, quantity) {
+      try {
+        if (!item.isAdded) {
+          if (quantity === null) {
+            quantity = 1
+          }
+          const { data } = await api.post(
+            `https://localhost:7018/cart?productId=${item.id}&quantity=${quantity}`,
+          )
+          commit('addToCard', {
+            item: item,
+          })
+          commit('updateItem', {
+            id: item.id,
+            updates: { isAdded: true },
+          })
+        } else {
+          // Удаляем из закладок
+          await api.delete(`https://localhost:7018/cart/${item.id}`)
+          commit('removeFromCard', item.id)
+          commit('updateItem', {
+            id: item.id,
+            updates: {
+              isFavirite: false,
+            },
+          })
+        }
+      } catch (err) {
+        console.error('Ошибка при работе с избранным:', err)
+      }
+
       try {
         const existingOrder = state.card.find((order) => order.parentId === item.id)
         if (!existingOrder) {
           const { data } = await axios.post('https://e0c9bc90f123d6dd.mokky.dev/orders', {
             parentId: item.id,
-          })
-          commit('addToCard', {
-            orderId: data.id,
-            productId: item.id,
-          })
-          commit('updateItem', {
-            id: item.id,
-            updates: { isAdded: true },
           })
         } else {
           await axios.delete(`https://e0c9bc90f123d6dd.mokky.dev/orders/${existingOrder.id}`)
@@ -201,7 +222,7 @@ const store = createStore({
       } catch (err) {
         console.error('Ошибка при работе с избранным:', err)
       }
-    }, */
+    },
   },
 })
 
