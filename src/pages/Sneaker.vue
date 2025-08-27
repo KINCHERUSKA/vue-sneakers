@@ -69,11 +69,11 @@ const setCurrentImage = () => {
   if (!sneakerData.value?.productImages?.length) return
 
   const mainImage = sneakerData.value.productImages.find((img) => img.isMain)
-  currentImage.value = mainImage.url
+  currentImage.value = `https://localhost:7018/${mainImage.url}`
 }
 
 const selectImage = (imageUrl) => {
-  currentImage.value = imageUrl
+  currentImage.value = `https://localhost:7018/${imageUrl}`
 }
 
 onMounted(getSneaker)
@@ -93,16 +93,17 @@ onMounted(getSneaker)
   </div>
   <div
     v-else
-    class="flex jusify-between h-screen w-full py-[85px] gap-8 font-raleway"
+    class="flex w-full py-[85px] gap-8 font-raleway"
     v-auto-animate
   >
+    <!-- Колонка с миниатюрами -->
     <div class="flex space-x-2 overflow-x-auto mt-4 flex-col min-w-max">
       <img
         v-for="(image, index) in sneakerData.productImages"
         :key="index"
-        :src="image.url"
+        :src="'https://localhost:7018/' + image.url"
         :class="{
-          'border-2 border-black': currentImage === image.url,
+          'border-2 border-black': currentImage === 'https://localhost:7018/' + image.url,
           'cursor-pointer hover:opacity-75': true,
         }"
         class="w-16 h-16 object-cover rounded"
@@ -110,101 +111,113 @@ onMounted(getSneaker)
         :alt="`Миниатюра ${index + 1}`"
       />
     </div>
-    <div>
+
+    <!-- Основное изображение -->
+    <div class="min-w-[500px]">
       <img
         :src="currentImage || '/no-image.jpg'"
-        class="min-w-[500px] h-auto object-cover"
+        class="w-full h-auto object-cover"
         :alt="sneakerData.name"
       />
     </div>
-    <div class="flex flex-col gap-4 w-full">
-      <div class="flex gap-4 bg-black text-white items-center px-5 py-2 w-fit">
+
+    <!-- Основная информация + правая панель в одном столбце -->
+    <div class="flex flex-col gap-6 w-full">
+      <!-- Заголовок растянут на всю ширину -->
+      <div class="flex justify-between items-center bg-black text-white px-5 py-2 w-full">
         <span class="text-2xl font-bold">{{ sneakerData.name }}</span>
         <img
           @click="onClickFavorite"
           :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
           alt=""
-          class="cursor-pointer transition bg-black p-1"
+          class="cursor-pointer transition p-1 w-6 h-6"
         />
       </div>
 
-      <div>
-        <p>Размер</p>
-        <div class="flex flex-wrap gap-2">
-          <button
-            v-for="size in sizes"
-            :key="size.value"
-            @click="selectedSize = size.value"
-            class="w-10 h-10 border flex items-center justify-center transition-colors duration-300"
-            :class="{
-              'bg-black text-white': selectedSize === size.value,
-              'border-black': size.available,
-              'border-dashed border-gray-400 opacity-50 cursor-not-allowed': !size.available,
-            }"
-            :disabled="!size.available"
-          >
-            {{ size.value }}
-          </button>
-        </div>
-      </div>
-      <div>
-        <p class="text-xl font-bold">Остаток на складе</p>
-        <span class="text-lg">{{ sneakerData.stockQuantity }}</span>
-      </div>
-      <div>
-        <span class="text-xl font-bold">О товаре</span>
-        <p class="min-h-[200px]">{{ sneakerData.description }}</p>
-      </div>
-    </div>
-    <div class="flex flex-col border-black border h-fit border-2 p-6 w-full">
-      <div class="p-4 flex items-center gap-3">
-        <span
-          v-if="sneakerData.promotionalPrice"
-          class="text-white text-4xl font-bold bg-red-600 px-4 py-2"
-          >{{ sneakerData.promotionalPrice }}</span
-        >
-        <div class="flex items-baseline gap-1">
+      <!-- Правая панель (цена и кнопки) сразу под заголовком -->
+      <div class="flex flex-col border-black border border-2 p-6 w-full">
+        <div class="p-4 flex items-center gap-3">
           <span
-            :class="{
-              'text-2xl line-through text-gray-500': sneakerData.promotionalPrice,
-              'text-4xl font-bold ': !sneakerData.promotionalPrice,
-            }"
-            >{{ sneakerData.price }}</span
+            v-if="sneakerData.promotionalPrice"
+            class="text-white text-4xl font-bold bg-red-600 px-4 py-2"
+            >{{ sneakerData.promotionalPrice }}</span
           >
-          <span class="ml-2">{{ sneakerData.currency }}</span>
+          <div class="flex items-baseline gap-1">
+            <span
+              :class="{
+                'text-2xl line-through text-gray-500': sneakerData.promotionalPrice,
+                'text-4xl font-bold ': !sneakerData.promotionalPrice,
+              }"
+              >{{ sneakerData.price }}</span
+            >
+            <span class="ml-2">{{ sneakerData.currency }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center w-full gap-3">
+          <div class="flex justify-center h-fit cursor-pointer">
+            <div @click="onClickAdd" class="border border-black px-3 lg:px-6 py-1 whitespace-nowrap">
+              <span class="text-2xl">{{ isAdded ? 'добавлено' : 'в корзину' }}</span>
+            </div>
+          </div>
+          <div class="flex bg-black text-white w-full justify-evenly p-2">
+            <span
+              class="text-2xl cursor-pointer"
+              @click="
+                () => {
+                  if (count - 1 < 0) {
+                    count = 0
+                  } else {
+                    count--
+                  }
+                }
+              "
+              >-</span
+            >
+            <span class="text-2xl">{{ count }}</span>
+            <span
+              class="text-2xl cursor-pointer"
+              @click="
+                () => {
+                  count++
+                }
+              "
+              >+</span
+            >
+          </div>
         </div>
       </div>
 
-      <div class="flex items-center w-full gap-3">
-        <div class="flex justify-center h-fit cursor-pointer">
-          <div @click="onClickAdd" class="border border-black px-3 lg:px-6 py-1 whitespace-nowrap">
-            <span class="text-2xl">{{ isAdded ? 'добавлено' : 'в корзину' }}</span>
+      <!-- Остальная информация о товаре -->
+      <div class="flex flex-col gap-6 w-full">
+        <div>
+          <p class="text-lg font-medium mb-2">Размер</p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="size in sizes"
+              :key="size.value"
+              @click="selectedSize = size.value"
+              class="w-10 h-10 border flex items-center justify-center transition-colors duration-300"
+              :class="{
+                'bg-black text-white': selectedSize === size.value,
+                'border-black': size.available,
+                'border-dashed border-gray-400 opacity-50 cursor-not-allowed': !size.available,
+              }"
+              :disabled="!size.available"
+            >
+              {{ size.value }}
+            </button>
           </div>
         </div>
-        <div class="flex bg-black text-white w-full justify-evenly p-2">
-          <span
-            class="text-2xl cursor-pointer"
-            @click="
-              () => {
-                if (count - 1 < 0) {
-                  count = 0
-                } else {
-                  count--
-                }
-              }
-            "
-            >-</span
-          >
-          <span class="text-2xl">{{ count }}</span>
-          <span
-            class="text-2xl cursor-pointer"
-            @click="
-              () => {
-                count++
-              }
-            "
-            >+</span
-          >
+
+        <div>
+          <p class="text-xl font-bold">Остаток на складе</p>
+          <span class="text-lg">{{ sneakerData.stockQuantity }} шт.</span>
+        </div>
+
+        <div class="flex flex-col">
+          <span class="text-xl font-bold mb-2">О товаре</span>
+          <p class="overflow-y-auto max-h-[200px]">{{ sneakerData.description }}</p>
         </div>
       </div>
     </div>
